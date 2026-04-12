@@ -35,7 +35,7 @@ export default function TuningPage({ onNavigate }: Props) {
 
           <div className="px-4 py-3.5 border-t border-white/[0.08] flex gap-2.5 flex-wrap">
             {[
-              { label: "读取历史可恢复配置", action: () => toast("演示：患者侧只提示存在可恢复配置，真正恢复需医生端下发且校验通过。") },
+              { label: "读取历史可恢复配置", action: () => toast("演示：用户侧只提示存在可恢复配置，真正恢复需医生端下发且校验通过。") },
               { label: "预设模板 A" },
               { label: "预设模板 B" },
               { label: "对比查看" },
@@ -56,7 +56,7 @@ export default function TuningPage({ onNavigate }: Props) {
         {/* Side panel */}
         <div className="flex flex-col gap-4 min-w-0">
           <Card>
-            <PanelTitle title="关联患者信息"><Btn onClick={() => onNavigate("patient-detail")}>详情</Btn></PanelTitle>
+            <PanelTitle title="关联用户信息"><Btn onClick={() => onNavigate("patients")}>详情</Btn></PanelTitle>
             <KV label="姓名" value="李某" />
             <KV label="用户ID" value="SZ202604120001" />
             <KV label="手机号" value="138****1234" />
@@ -81,7 +81,7 @@ export default function TuningPage({ onNavigate }: Props) {
           <Card>
             <PanelTitle title="操作提醒"><Tag variant="warn">重要</Tag></PanelTitle>
             <div className="flex flex-col gap-3">
-              <TimelineItem title="患者不可在 App 端直接恢复参数" desc="患者侧仅可看到存在可恢复配置的提示。" />
+              <TimelineItem title="用户不可在 App 端直接恢复参数" desc="用户侧仅可看到存在可恢复配置的提示。" />
               <TimelineItem title="保存前需检查版本兼容" desc="PC 客户端、固件、参数模板任一不匹配，均应拦截。" />
             </div>
           </Card>

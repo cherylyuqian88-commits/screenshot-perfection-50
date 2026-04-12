@@ -8,7 +8,7 @@ export default function NewPatientPage({ onNavigate }: Props) {
     <div className="animate-fade-in">
       <div className="grid grid-cols-2 gap-4 max-xl:grid-cols-1">
         <Card>
-          <PanelTitle title="新建患者"><Tag variant="info">医生端建档</Tag></PanelTitle>
+          <PanelTitle title="新建用户"><Tag variant="info">医生端建档</Tag></PanelTitle>
           <div className="grid grid-cols-2 gap-3">
             {[
               { label: "姓名", val: "李某" },
@@ -31,7 +31,7 @@ export default function NewPatientPage({ onNavigate }: Props) {
             ))}
           </div>
           <div className="flex gap-2.5 flex-wrap mt-3">
-            <Btn onClick={() => toast("先执行云端查重，避免重复新建患者。")}>云端查重</Btn>
+            <Btn onClick={() => toast("先执行云端查重，避免重复新建用户。")}>云端查重</Btn>
             <Btn variant="primary" onClick={() => toast("演示：系统自动生成用户ID = 机构 + 时间戳 + 流水号。")}>确认建档并生成用户ID</Btn>
           </div>
         </Card>
@@ -40,15 +40,15 @@ export default function NewPatientPage({ onNavigate }: Props) {
           <PanelTitle title="建档规则提示"><Tag variant="warn">关键约束</Tag></PanelTitle>
           <div className="flex flex-col gap-3">
             <TimelineItem title="用户ID生成规则" desc="由系统根据机构编码 + 时间戳 + 流水号自动生成，不允许医生手动输入。" />
-            <TimelineItem title="手机号重复处理" desc="若手机号已存在，需验证码确认，并优先拉取云端已有患者档案，不重复建新账号。" />
-            <TimelineItem title="手机号变更" desc="后续若患者需变更手机号，由医生在 PC 端发起处理，更新当前登录方式。" />
+            <TimelineItem title="手机号重复处理" desc="若手机号已存在，需验证码确认，并优先拉取云端已有用户档案，不重复建新账号。" />
+            <TimelineItem title="手机号变更" desc="后续若用户需变更手机号，由医生在 PC 端发起处理，更新当前登录方式。" />
           </div>
         </Card>
       </div>
 
       <Card className="mt-4">
         <PanelTitle title="查重结果示例">
-          <Btn onClick={() => toast('演示：已存在患者时，医生应选择"拉取并建立服务关系"，而不是重复创建。')}>查看处理建议</Btn>
+          <Btn onClick={() => toast('演示：已存在用户时，医生应选择"拉取并建立服务关系"，而不是重复创建。')}>查看处理建议</Btn>
         </PanelTitle>
         <TableWrap>
           <table className="w-full border-collapse">
@@ -66,7 +66,7 @@ export default function NewPatientPage({ onNavigate }: Props) {
                 <td className="px-4 py-3.5 border-b border-line text-[13px]">SZ202604120001</td>
                 <td className="px-4 py-3.5 border-b border-line text-[13px]">深圳爱眼低视力中心</td>
                 <td className="px-4 py-3.5 border-b border-line text-[13px]">完整信息可见</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]"><Btn variant="ok" onClick={() => onNavigate("patient-detail")}>直接进入详情</Btn></td>
+                <td className="px-4 py-3.5 border-b border-line text-[13px]"><Btn variant="ok" onClick={() => onNavigate("patients")}>直接进入详情</Btn></td>
               </tr>
               <tr>
                 <td className="px-4 py-3.5 border-b border-line text-[13px]">王某</td>
