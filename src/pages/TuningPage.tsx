@@ -92,6 +92,31 @@ export default function TuningPage({ onNavigate }: Props) {
               <Btn onClick={() => toast("演示：替换当前关联用户")}>替换用户</Btn>
             </PanelTitle>
             <KV label="姓名" value="李某" />
+            <KV label="年龄" value="62岁" />
+            <KV label="备注" value="黄斑变性患者" />
+          </Card>
+
+          <Card>
+            <PanelTitle title="调试记录">
+              <Btn onClick={() => toast("演示：查看全部调参记录")}>更多</Btn>
+            </PanelTitle>
+            <div className="flex flex-col gap-2">
+              {[
+                { date: "2026-04-10 14:30", sn: "9A24" },
+                { date: "2026-04-08 10:15", sn: "9A24" },
+                { date: "2026-03-28 16:40", sn: "9A24" },
+                { date: "2026-03-15 09:20", sn: "9A24" },
+                { date: "2026-02-22 11:05", sn: "9A24" },
+              ].map((r, i) => (
+                <div key={i} className="flex items-center justify-between text-xs py-1.5 border-b border-border/50 last:border-0">
+                  <div className="text-foreground/80">
+                    <span className="text-muted-foreground mr-2">SN {r.sn}</span>
+                    {r.date}
+                  </div>
+                  <Btn onClick={() => toast(`演示：调取 ${r.date} 的调参记录`)}>调取</Btn>
+                </div>
+              ))}
+            </div>
           </Card>
         </div>
       </div>
