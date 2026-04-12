@@ -15,7 +15,7 @@ export default function TuningPage({ onNavigate }: Props) {
         {/* Stage */}
         <div className="bg-gradient-to-b from-sidebar to-[hsl(216,36%,12%)] rounded-[20px] border border-sidebar-border relative overflow-hidden shadow-lg flex flex-col">
           <div className="px-4 py-3.5 border-b border-white/[0.08] flex items-center gap-3 text-primary-foreground">
-            <div className="text-lg font-extrabold">调参工作区</div>
+            <div className="text-lg font-extrabold">SN-XXXXXXXX</div>
             {connected ? (
               <>
                 <span className="text-xs text-sidebar-foreground/60">RX-A102 / 9A24 / V0.5.1</span>
@@ -27,6 +27,12 @@ export default function TuningPage({ onNavigate }: Props) {
                 <Tag variant="warn">未连接设备</Tag>
               </>
             )}
+            <div className="ml-auto flex items-center gap-2">
+              <span className="text-xs text-sidebar-foreground/60">关联用户：李某</span>
+              <button onClick={() => toast("演示：替换当前关联用户")} className="bg-white/[0.08] text-primary-foreground border border-white/10 px-2.5 py-1 rounded-lg font-semibold cursor-pointer text-xs hover:bg-white/[0.12] transition-all">
+                替换用户
+              </button>
+            </div>
           </div>
 
           {connected ? (
@@ -96,12 +102,6 @@ export default function TuningPage({ onNavigate }: Props) {
             </div>
           </div>
 
-          <Card>
-            <PanelTitle title="关联用户">
-              <Btn onClick={() => toast("演示：替换当前关联用户")}>替换用户</Btn>
-            </PanelTitle>
-            <KV label="姓名" value="李某" />
-          </Card>
         </div>
       </div>
 
