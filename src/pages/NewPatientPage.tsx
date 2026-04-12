@@ -48,7 +48,7 @@ export default function NewPatientPage({ onNavigate }: Props) {
 
       <Card className="mt-4">
         <PanelTitle title="查重结果示例">
-          <Btn onClick={() => toast("演示：已存在患者时，医生应选择"拉取并建立服务关系"，而不是重复创建。")}>查看处理建议</Btn>
+          <Btn onClick={() => toast('演示：已存在患者时，医生应选择"拉取并建立服务关系"，而不是重复创建。')}>查看处理建议</Btn>
         </PanelTitle>
         <TableWrap>
           <table className="w-full border-collapse">

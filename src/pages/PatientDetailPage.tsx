@@ -33,7 +33,7 @@ export default function PatientDetailPage({ onNavigate }: Props) {
           <PanelTitle title="最近事件"><Tag variant="info">患者侧仅看摘要</Tag></PanelTitle>
           <div className="flex flex-col gap-3">
             <TimelineItem title="最近一次调参完成" desc="2026-04-12 10:12 · 陈医生 · 参数模板 PT-2026-04" />
-            <TimelineItem title="控制盒曾提示温度异常" desc="患者侧仅显示"已恢复"，原始工程日志不上患者端屏幕。" />
+            <TimelineItem title="控制盒曾提示温度异常" desc={'患者侧仅显示"已恢复"，原始工程日志不上患者端屏幕。'} />
             <TimelineItem title="当前服务机构来源" desc="按患者最后一次确认切换绑定机构结果计算，不按临时连接动态切换。" />
           </div>
         </Card>
