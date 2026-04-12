@@ -18,9 +18,7 @@ export default function TuningPage({ onNavigate }: Props) {
             <div>
               <div className="text-lg font-extrabold">调参工作区</div>
               <div className="text-xs text-sidebar-muted mt-1">
-                {connected
-                  ? "此区域后续可替换为实时画面、参数调节控件、视野补偿示意图和保存面板"
-                  : "请先连接设备，完成兼容校验后进入调参"}
+                {!connected && "请先连接设备，完成兼容校验后进入调参"}
               </div>
             </div>
             <div className="flex gap-2 items-center">
