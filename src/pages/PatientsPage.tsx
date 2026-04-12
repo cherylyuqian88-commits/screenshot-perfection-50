@@ -112,11 +112,11 @@ export default function PatientsPage({ onNavigate }: Props) {
                       <div className="flex gap-2">
                         {tab === "local" ? (
                           <>
-                            <Btn onClick={(e) => { e.stopPropagation(); setSelectedUser(u.id); }}>详情</Btn>
-                            <Btn variant="ghost" onClick={(e) => { e.stopPropagation(); onNavigate("tuning"); }}>调参</Btn>
+                            <Btn onClick={() => setSelectedUser(u.id)}>详情</Btn>
+                            <Btn variant="ghost" onClick={() => onNavigate("tuning")}>调参</Btn>
                           </>
                         ) : (
-                          <Btn variant="primary" onClick={(e) => { e.stopPropagation(); toast("演示：建立本机构服务关系后，才可读取完整必要信息。"); }}>建立关系</Btn>
+                          <Btn variant="primary" onClick={() => toast("演示：建立本机构服务关系后，才可读取完整必要信息。")}>建立关系</Btn>
                         )}
                       </div>
                     </td>
