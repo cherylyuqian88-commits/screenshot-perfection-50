@@ -25,8 +25,8 @@ const menuGroups: { title: string; items: NavItem[] }[] = [
   {
     title: "追溯与设置",
     items: [
-      { key: "institution", label: "机构变更记录", num: "07" },
-      { key: "account", label: "我的账号", num: "08" },
+      { key: "account", label: "我的账号", num: "07" },
+      
     ],
   },
 ];
