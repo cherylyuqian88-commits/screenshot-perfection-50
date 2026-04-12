@@ -116,7 +116,7 @@ export default function PatientsPage({ onNavigate }: Props) {
               </Card>
 
               <Card>
-                <PanelTitle title="最近事件"><Tag variant="info">用户侧仅看摘要</Tag></PanelTitle>
+                <PanelTitle title="最近事件" />
                 <div className="flex flex-col gap-3">
                   <TimelineItem title="最近一次调参完成" desc="2026-04-12 10:12 · 陈医生 · 参数模板 PT-2026-04" />
                   
