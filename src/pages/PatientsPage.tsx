@@ -135,20 +135,15 @@ export default function PatientsPage({ onNavigate }: Props) {
                 <PanelTitle title="用户详情">
                   <div className="flex gap-2">
                     <Btn onClick={() => onNavigate("records")}>调参记录</Btn>
-                    <Btn variant="primary" onClick={() => onNavigate("tuning")}>进入调参</Btn>
+                    <Btn variant="primary" onClick={() => onNavigate("tuning")}>编辑</Btn>
                   </div>
                 </PanelTitle>
                 <KV label="姓名" value={detail.name} />
                 <KV label="用户ID" value={detail.id} />
                 <KV label="手机号" value={detail.phone} />
                 <KV label="性别 / 年龄" value={detail.gender} />
-                <KV label="当前服务机构" value={detail.org} />
-                <KV label="设备状态" value={<Tag variant={(detail as any).deviceWarn ? "warn" : undefined}>{detail.device}</Tag>} />
-                <KV label="关系状态" value={<Tag variant={(detail as any).isCross ? "warn" : undefined}>{detail.status}</Tag>} />
-                <div className="flex gap-2 flex-wrap mt-3">
-                  <Btn onClick={() => toast("演示：手机号变更仅允许医生 PC 端处理。")}>变更手机号</Btn>
-                  <Btn variant="danger" onClick={() => toast("演示：解绑仅解除展示关系，不自动清除控制盒内医生调试参数。")}>解除设备关联</Btn>
-                </div>
+                <KV label="关联机构" value={detail.org} />
+                <KV label="关联设备" value={<Tag variant={(detail as any).deviceWarn ? "warn" : undefined}>{detail.device}</Tag>} />
               </Card>
 
               <Card>
