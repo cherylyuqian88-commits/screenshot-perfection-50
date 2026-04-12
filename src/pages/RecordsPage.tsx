@@ -1,5 +1,11 @@
 import { useState } from "react";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Card, Tag, PanelTitle, Btn, TableWrap } from "@/components/ui-parts";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface Props { onNavigate: (page: string) => void; }
 
@@ -24,6 +30,8 @@ const PAGE_SIZE = 5;
 
 export default function RecordsPage({ onNavigate }: Props) {
   const [page, setPage] = useState(1);
+  const [startDate, setStartDate] = useState<Date | undefined>(new Date("2026-04-01"));
+  const [endDate, setEndDate] = useState<Date | undefined>(new Date("2026-04-12"));
   const totalPages = Math.ceil(records.length / PAGE_SIZE);
   const paged = records.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
@@ -32,6 +40,29 @@ export default function RecordsPage({ onNavigate }: Props) {
       <Card>
         <PanelTitle title="调参记录">
           <div className="flex items-center gap-2">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className={cn("w-[140px] justify-start text-left font-normal text-sm rounded-[14px]", !startDate && "text-muted-foreground")}>
+                  <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
+                  {startDate ? format(startDate, "yyyy-MM-dd") : "开始日期"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar mode="single" selected={startDate} onSelect={setStartDate} initialFocus className={cn("p-3 pointer-events-auto")} />
+              </PopoverContent>
+            </Popover>
+            <span className="text-muted-foreground text-sm">至</span>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className={cn("w-[140px] justify-start text-left font-normal text-sm rounded-[14px]", !endDate && "text-muted-foreground")}>
+                  <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
+                  {endDate ? format(endDate, "yyyy-MM-dd") : "结束日期"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar mode="single" selected={endDate} onSelect={setEndDate} initialFocus className={cn("p-3 pointer-events-auto")} />
+              </PopoverContent>
+            </Popover>
             <input className="border border-line rounded-[14px] bg-card px-3.5 py-2 text-foreground outline-none w-[200px] text-sm" placeholder="用户姓名 / 用户ID" />
             <Btn>搜索</Btn>
           </div>
