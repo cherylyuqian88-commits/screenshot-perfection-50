@@ -8,12 +8,12 @@ interface Props { onNavigate: (page: string) => void; }
 type Tab = "local" | "cross";
 
 const localUsers = [
-  { name: "李某", id: "SZ202604120001", phone: "138****1234", gender: "男 / 58", org: "深圳爱眼低视力中心", device: "已关联控制盒", status: "本机构服务中" },
-  { name: "张某", id: "SZ202603180021", phone: "135****6620", gender: "男 / 63", org: "深圳爱眼低视力中心", device: "版本风险", status: "本机构服务中", deviceWarn: true },
+  { name: "李某", id: "SZ202604120001", phone: "138****1234", gender: "男 / 58", org: "深圳爱眼低视力中心", device: "已关联控制盒", status: "本机构服务中", activity: "高", avgDuration: "4.2h" },
+  { name: "张某", id: "SZ202603180021", phone: "135****6620", gender: "男 / 63", org: "深圳爱眼低视力中心", device: "版本风险", status: "本机构服务中", deviceWarn: true, activity: "中", avgDuration: "2.8h" },
 ];
 
 const crossUsers = [
-  { name: "王某", id: "HZ202603030014", phone: "137****9981", gender: "女 / 49", org: "杭州康复门诊", device: "未显示", status: "待建立关系", isCross: true },
+  { name: "王某", id: "HZ202603030014", phone: "137****9981", gender: "女 / 49", org: "杭州康复门诊", device: "未显示", status: "待建立关系", isCross: true, activity: "低", avgDuration: "0.5h" },
 ];
 
 export default function PatientsPage({ onNavigate }: Props) {
@@ -75,10 +75,7 @@ export default function PatientsPage({ onNavigate }: Props) {
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  {(tab === "local"
-                    ? ["姓名","用户ID","手机号","性别/年龄","设备状态","操作"]
-                    : ["姓名","用户ID","手机号","性别/年龄","当前服务机构","可见范围","操作"]
-                  ).map(h => (
+                  {["用户ID","姓名","关联机构","关联设备","活跃度","近7天日均时长"].map(h => (
                     <th key={h} className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1]">{h}</th>
                   ))}
                 </tr>
@@ -93,21 +90,14 @@ export default function PatientsPage({ onNavigate }: Props) {
                       selectedUser === u.id ? "bg-brand/[0.06]" : "hover:bg-secondary/60"
                     )}
                   >
-                    <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.name}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.id}</td>
-                    <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.phone}</td>
-                    <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.gender}</td>
-                    {tab === "cross" && (
-                      <>
-                        <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.org}</td>
-                        <td className="px-4 py-3.5 border-b border-line text-[13px]">仅脱敏字段</td>
-                      </>
-                    )}
-                    {tab === "local" && (
-                      <td className="px-4 py-3.5 border-b border-line text-[13px]">
-                        <Tag variant={(u as any).deviceWarn ? "warn" : undefined}>{u.device}</Tag>
-                      </td>
-                    )}
+                    <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.name}</td>
+                    <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.org}</td>
+                    <td className="px-4 py-3.5 border-b border-line text-[13px]">
+                      <Tag variant={(u as any).deviceWarn ? "warn" : undefined}>{u.device}</Tag>
+                    </td>
+                    <td className="px-4 py-3.5 border-b border-line text-[13px]">{(u as any).activity}</td>
+                    <td className="px-4 py-3.5 border-b border-line text-[13px]">{(u as any).avgDuration}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">
                       <div className="flex gap-2">
                         {tab === "local" ? (
