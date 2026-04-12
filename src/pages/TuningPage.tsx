@@ -99,7 +99,7 @@ export default function TuningPage({ onNavigate }: Props) {
 
           <Card>
             <PanelTitle title="调参记录">
-              <Btn onClick={() => onNavigate("patient-detail")}>更多</Btn>
+              <Btn onClick={() => onNavigate("patient-records")}>更多</Btn>
             </PanelTitle>
             <div className="flex flex-col gap-2">
               {[
