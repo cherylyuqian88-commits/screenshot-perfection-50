@@ -14,24 +14,25 @@ export default function TuningPage({ onNavigate }: Props) {
       <div className="h-[calc(100vh-120px)] grid grid-cols-[1fr_260px] gap-4 max-xl:grid-cols-1 max-xl:h-auto">
         {/* Stage */}
         <div className="bg-gradient-to-b from-sidebar to-[hsl(216,36%,12%)] rounded-[20px] border border-sidebar-border relative overflow-hidden shadow-lg flex flex-col">
-          <div className="px-4 py-3.5 border-b border-white/[0.08] flex items-center gap-3 text-primary-foreground">
-            <div className="text-lg font-extrabold">SN-XXXXXXXX</div>
-            {connected ? (
-              <>
-                <span className="text-xs text-sidebar-foreground/60">RX-A102 / 9A24 / V0.5.1</span>
-                <span className="text-xs text-sidebar-foreground/60">USB · 电量 82%</span>
-              </>
-            ) : (
-              <>
-                <span className="text-xs text-sidebar-muted">请先连接设备，完成兼容校验后进入调参</span>
+          <div className="px-4 py-3.5 border-b border-white/[0.08] flex justify-between items-center text-primary-foreground">
+            <div>
+              <div className="text-lg font-extrabold">调参工作区</div>
+              <div className="text-xs text-sidebar-muted mt-1">
+                {connected
+                  ? "此区域后续可替换为实时画面、参数调节控件、视野补偿示意图和保存面板"
+                  : "请先连接设备，完成兼容校验后进入调参"}
+              </div>
+            </div>
+            <div className="flex gap-2 items-center">
+              {connected ? (
+                <>
+                  <span className="text-xs text-sidebar-foreground/60 mr-1">RX-A102 / 9A24 / V0.5.1</span>
+                  <span className="text-xs text-sidebar-foreground/60">USB · 电量 82%</span>
+                  <Tag variant="info">已连接</Tag>
+                </>
+              ) : (
                 <Tag variant="warn">未连接设备</Tag>
-              </>
-            )}
-            <div className="ml-auto flex items-center gap-2">
-              <span className="text-xs text-sidebar-foreground/60">关联用户：李某</span>
-              <button onClick={() => toast("演示：替换当前关联用户")} className="bg-white/[0.08] text-primary-foreground border border-white/10 px-2.5 py-1 rounded-lg font-semibold cursor-pointer text-xs hover:bg-white/[0.12] transition-all">
-                替换用户
-              </button>
+              )}
             </div>
           </div>
 
@@ -90,7 +91,24 @@ export default function TuningPage({ onNavigate }: Props) {
 
         {/* Side panel */}
         <div className="flex flex-col gap-4 min-w-0 relative">
+          {/* 操作提醒 - 右上角 */}
+          <div className="text-[11px] text-soft leading-relaxed space-y-1">
+            <div className="flex items-start gap-1.5">
+              <span className="shrink-0 inline-block text-[10px] px-1.5 py-0 rounded-md bg-[hsl(45,93%,47%)]/15 text-[hsl(45,93%,47%)] font-semibold">提醒</span>
+              <span>用户不可在 App 端直接恢复参数，仅可看到存在可恢复配置的提示。</span>
+            </div>
+            <div className="flex items-start gap-1.5">
+              <span className="shrink-0 inline-block text-[10px] px-1.5 py-0 rounded-md bg-[hsl(45,93%,47%)]/15 text-[hsl(45,93%,47%)] font-semibold">提醒</span>
+              <span>保存前需检查版本兼容，PC 客户端、固件、参数模板任一不匹配均应拦截。</span>
+            </div>
+          </div>
 
+          <Card>
+            <PanelTitle title="关联用户">
+              <Btn onClick={() => toast("演示：替换当前关联用户")}>替换用户</Btn>
+            </PanelTitle>
+            <KV label="姓名" value="李某" />
+          </Card>
         </div>
       </div>
 
