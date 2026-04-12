@@ -8,12 +8,12 @@ interface Props { onNavigate: (page: string) => void; }
 type Tab = "local" | "cross";
 
 const localUsers = [
-  { name: "李某", id: "SZ202604120001", phone: "138****1234", gender: "男 / 58", org: "深圳爱眼低视力中心", device: "已关联控制盒", status: "本机构服务中", activity: "高", avgDuration: "4.2h" },
-  { name: "张某", id: "SZ202603180021", phone: "135****6620", gender: "男 / 63", org: "深圳爱眼低视力中心", device: "版本风险", status: "本机构服务中", deviceWarn: true, activity: "中", avgDuration: "2.8h" },
+  { name: "李某", id: "SZ202604120001", phone: "138****1234", gender: "男 / 58", org: "深圳爱眼低视力中心", device: "已关联控制盒", status: "本机构服务中", activity: "高", avgDuration: "4.2h", doctor: "陈医生", lastTuning: "2026-04-12 10:12" },
+  { name: "张某", id: "SZ202603180021", phone: "135****6620", gender: "男 / 63", org: "深圳爱眼低视力中心", device: "版本风险", status: "本机构服务中", deviceWarn: true, activity: "中", avgDuration: "2.8h", doctor: "王医生", lastTuning: "2026-04-10 14:30" },
 ];
 
 const crossUsers = [
-  { name: "王某", id: "HZ202603030014", phone: "137****9981", gender: "女 / 49", org: "杭州康复门诊", device: "未显示", status: "待建立关系", isCross: true, activity: "低", avgDuration: "0.5h" },
+  { name: "王某", id: "HZ202603030014", phone: "137****9981", gender: "女 / 49", org: "杭州康复门诊", device: "未显示", status: "待建立关系", isCross: true, activity: "低", avgDuration: "0.5h", doctor: "—", lastTuning: "—" },
 ];
 
 export default function PatientsPage({ onNavigate }: Props) {
