@@ -60,7 +60,6 @@ export default function SelectUserPage({ onNavigate }: Props) {
         </TableWrap>
 
         <div className="flex items-center justify-end gap-2.5 mt-4">
-          <Btn onClick={() => { toast("演示：已取消关联用户"); onNavigate("tuning"); }}>取消关联用户</Btn>
           <Btn variant="primary" onClick={() => {
             if (!selected) { toast("请先选择一个用户"); return; }
             const user = users.find(u => u.id === selected);
