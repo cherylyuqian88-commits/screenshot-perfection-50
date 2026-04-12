@@ -63,7 +63,7 @@ export default function RecordsPage({ onNavigate }: Props) {
                 <Calendar mode="single" selected={endDate} onSelect={setEndDate} initialFocus className={cn("p-3 pointer-events-auto")} />
               </PopoverContent>
             </Popover>
-            <input className="border border-line rounded-[14px] bg-card px-3.5 py-2 text-foreground outline-none w-[200px] text-sm" placeholder="用户姓名 / 用户ID" />
+            <input className="border border-line rounded-[14px] bg-card px-3.5 py-2 text-foreground outline-none w-[280px] text-sm" placeholder="搜索用户姓名/用户ID/电话号码/操作医生" />
             <Btn>搜索</Btn>
           </div>
         </PanelTitle>
