@@ -16,14 +16,14 @@ export default function TuningPage({ onNavigate }: Props) {
         <div className="bg-gradient-to-b from-sidebar to-[hsl(216,36%,12%)] rounded-[20px] border border-sidebar-border relative overflow-hidden shadow-lg flex flex-col">
           <div className="px-4 py-3.5 border-b border-white/[0.08] flex justify-between items-center text-primary-foreground">
             <div>
-              <div className="text-lg font-extrabold">调参工作区</div>
+              <div className="text-lg font-extrabold">SN-XXXXXXXXXX</div>
               {!connected && <div className="text-xs text-sidebar-muted mt-1">请先连接设备，完成兼容校验后进入调参</div>}
             </div>
             <div className="flex gap-2 items-center">
               {connected ? (
                 <>
                   <span className="text-xs text-sidebar-foreground/60 mr-1">RX-A102 / 9A24 / V0.5.1</span>
-                  <span className="text-xs text-sidebar-foreground/60">USB · 电量 82%</span>
+                  <span className="text-xs text-accent bg-primary-foreground px-1.5 py-0.5 rounded">USB · 电量 82%</span>
                   <Tag variant="info">已连接</Tag>
                 </>
               ) : (
@@ -89,7 +89,12 @@ export default function TuningPage({ onNavigate }: Props) {
 
           <Card>
             <PanelTitle title="关联用户">
-              <Btn onClick={() => toast("演示：替换当前关联用户")}>替换用户</Btn>
+              <Btn 
+                className="border-none bg-secondary text-accent-foreground opacity-65"
+                onClick={() => toast("演示：替换当前关联用户")}
+              >
+                替换用户
+              </Btn>
             </PanelTitle>
             <KV label="姓名" value="李某" />
             <KV label="年龄" value="62岁" />
@@ -103,10 +108,10 @@ export default function TuningPage({ onNavigate }: Props) {
             <div className="flex flex-col gap-2">
               {[
                 { date: "2026-04-10 14:30", sn: "9A24" },
-                { date: "2026-04-08 10:15", sn: "9A24" },
-                { date: "2026-03-28 16:40", sn: "9A24" },
-                { date: "2026-03-15 09:20", sn: "9A24" },
-                { date: "2026-02-22 11:05", sn: "9A24" },
+                { date: "2026-04-08 10:15", sn: "9A23" },
+                { date: "2026-03-28 16:40", sn: "9A22" },
+                { date: "2026-03-15 09:20", sn: "9A21" },
+                { date: "2026-02-22 11:05", sn: "9A20" },
               ].map((r, i) => (
                 <div key={i} className="flex items-center justify-between text-xs py-1.5 border-b border-border/50 last:border-0">
                   <div className="text-foreground/80">
