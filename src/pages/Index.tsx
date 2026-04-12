@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import LoginPage from "./LoginPage";
-import AppSidebar from "@/components/AppSidebar";
-import Topbar from "@/components/Topbar";
-import DashboardPage from "./DashboardPage";
+import TopNavbar from "@/components/TopNavbar";
 import PatientsPage from "./PatientsPage";
 import NewPatientPage from "./NewPatientPage";
 import PatientDetailPage from "./PatientDetailPage";
@@ -14,7 +12,6 @@ import InstitutionPage from "./InstitutionPage";
 import AccountPage from "./AccountPage";
 
 const pageMeta: Record<string, { title: string; desc: string }> = {
-  dashboard: { title: "首页看板", desc: "查看本机构患者、设备连接状态、待处理事项与最近调参记录" },
   patients: { title: "患者列表", desc: "搜索本机构患者或云端患者，查看关系状态并进入详情或调参流程" },
   "new-patient": { title: "新建患者", desc: "医生录入患者基础信息，执行云端查重后生成用户ID并建档" },
   "patient-detail": { title: "患者详情", desc: "查看患者档案、当前服务机构、设备关系、历史记录和操作规则" },
@@ -27,7 +24,7 @@ const pageMeta: Record<string, { title: string; desc: string }> = {
 
 export default function Index() {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [activePage, setActivePage] = useState("dashboard");
+  const [activePage, setActivePage] = useState("patients");
 
   if (!loggedIn) {
     return <LoginPage onLogin={() => setLoggedIn(true)} />;
@@ -35,16 +32,15 @@ export default function Index() {
 
   const handleLogout = () => {
     setLoggedIn(false);
-    setActivePage("dashboard");
+    setActivePage("patients");
     toast("已退出登录，返回登录页。");
   };
 
-  const meta = pageMeta[activePage] || pageMeta.dashboard;
+  const meta = pageMeta[activePage] || pageMeta.patients;
 
   const renderPage = () => {
     const nav = setActivePage;
     switch (activePage) {
-      case "dashboard": return <DashboardPage onNavigate={nav} />;
       case "patients": return <PatientsPage onNavigate={nav} />;
       case "new-patient": return <NewPatientPage onNavigate={nav} />;
       case "patient-detail": return <PatientDetailPage onNavigate={nav} />;
@@ -53,18 +49,19 @@ export default function Index() {
       case "records": return <RecordsPage onNavigate={nav} />;
       case "institution": return <InstitutionPage />;
       case "account": return <AccountPage onLogout={handleLogout} />;
-      default: return <DashboardPage onNavigate={nav} />;
+      default: return <PatientsPage onNavigate={nav} />;
     }
   };
 
   return (
-    <div className="h-screen grid grid-cols-[260px_1fr] max-lg:grid-cols-[88px_1fr]">
-      <AppSidebar activePage={activePage} onNavigate={setActivePage} />
-      <main className="flex flex-col min-w-0">
-        <Topbar title={meta.title} desc={meta.desc} />
-        <div className="flex-1 overflow-auto p-[22px]">
-          {renderPage()}
-        </div>
+    <div className="h-screen flex flex-col">
+      <TopNavbar activePage={activePage} onNavigate={setActivePage} onLogout={handleLogout} />
+      <div className="bg-secondary/40 border-b border-line px-6 py-3">
+        <h1 className="text-lg font-bold m-0 leading-tight">{meta.title}</h1>
+        <p className="mt-0.5 text-xs text-soft">{meta.desc}</p>
+      </div>
+      <main className="flex-1 overflow-auto p-5">
+        {renderPage()}
       </main>
     </div>
   );
