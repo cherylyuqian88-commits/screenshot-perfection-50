@@ -15,7 +15,7 @@ export default function PatientRecordsPage({ onNavigate }: Props) {
     <div className="animate-fade-in">
       <Card>
         <PanelTitle title="李某 — 调参记录">
-          <Btn onClick={() => onNavigate("patients")}>返回用户列表</Btn>
+          <Btn onClick={() => onNavigate("tuning")}>返回调参页面</Btn>
         </PanelTitle>
 
         <TableWrap>
