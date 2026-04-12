@@ -18,16 +18,16 @@ const menuGroups: { title: string; items: NavItem[] }[] = [
   {
     title: "设备与调参",
     items: [
-      { key: "device-link", label: "设备连接", num: "05" },
-      { key: "tuning", label: "调参工作区", num: "06" },
-      { key: "records", label: "调参记录", num: "07" },
+      { key: "device-link", label: "设备连接", num: "04" },
+      { key: "tuning", label: "调参工作区", num: "05" },
+      { key: "records", label: "调参记录", num: "06" },
     ],
   },
   {
     title: "追溯与设置",
     items: [
-      { key: "institution", label: "机构变更记录", num: "08" },
-      { key: "account", label: "我的账号", num: "09" },
+      { key: "institution", label: "机构变更记录", num: "07" },
+      { key: "account", label: "我的账号", num: "08" },
     ],
   },
 ];
