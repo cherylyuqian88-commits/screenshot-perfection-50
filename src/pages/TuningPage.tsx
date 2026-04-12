@@ -68,11 +68,7 @@ export default function TuningPage({ onNavigate }: Props) {
             /* 未连接设备状态 */
             <div className="flex-1 grid place-items-center text-primary-foreground text-center p-8 relative">
               <div>
-                <div className="text-[13px] text-sidebar-foreground/70 leading-relaxed mb-5 max-w-[520px]">
-                  统一设备定义：整套设备 = 眼镜 + 控制盒；PC端有线接入对象与日志、参数存储位置均为控制盒。
-                </div>
                 <div className="flex flex-col gap-3 items-center mb-6">
-                  <TimelineItem dark title="当前识别设备" desc="控制盒 RX-A102 / SN 9A24 / 固件 V0.5.1" />
                   <TimelineItem dark title="连接状态" desc="等待 USB 连接…" />
                 </div>
                 <div className="flex gap-2.5 justify-center flex-wrap">
