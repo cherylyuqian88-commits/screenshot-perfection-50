@@ -34,7 +34,7 @@ export default function PatientsPage({ onNavigate }: Props) {
         <Card className="flex flex-col min-h-0">
           <PanelTitle title="用户列表">
             <div className="flex items-center gap-2.5">
-              <input className="border border-line rounded-[14px] bg-card px-3.5 py-2.5 text-foreground outline-none max-w-[220px] text-sm focus:border-brand focus:shadow-[0_0_0_4px_hsl(197_92%_60%/0.12)]" placeholder="搜索姓名 / 手机号 / 用户ID" defaultValue="李" />
+              <input className="border border-line rounded-[14px] bg-card px-3.5 py-2.5 text-foreground outline-none max-w-[220px] text-sm focus:border-brand focus:shadow-[0_0_0_4px_hsl(197_92%_60%/0.12)]" placeholder="搜索用户ID/姓名/手机号" />
               <Btn variant="primary" onClick={() => toast("演示搜索：若手机号重复，将优先提示复用云端用户档案。")}>查询</Btn>
               <Btn variant="primary" onClick={() => onNavigate("new-patient")}>新建用户</Btn>
             </div>
@@ -76,6 +76,26 @@ export default function PatientsPage({ onNavigate }: Props) {
               </tbody>
             </table>
           </TableWrap>
+
+          {/* Pagination */}
+          <div className="flex items-center justify-end gap-1.5 mt-3 text-sm">
+            <button className="px-3 py-1.5 rounded-lg border border-line bg-card text-soft cursor-pointer hover:text-foreground transition-colors text-[13px]">上一页</button>
+            {[1, 2, 3].map((p) => (
+              <button
+                key={p}
+                className={cn(
+                  "w-8 h-8 rounded-lg border cursor-pointer text-[13px] transition-colors",
+                  p === 1
+                    ? "bg-gradient-to-r from-[hsl(199,89%,49%)] to-[hsl(224,76%,48%)] text-primary-foreground border-transparent"
+                    : "border-line bg-card text-soft hover:text-foreground"
+                )}
+              >
+                {p}
+              </button>
+            ))}
+            <button className="px-3 py-1.5 rounded-lg border border-line bg-card text-soft cursor-pointer hover:text-foreground transition-colors text-[13px]">下一页</button>
+            <span className="text-soft text-[13px] ml-2">共 6 条</span>
+          </div>
         </Card>
 
         {/* Right: user detail */}
