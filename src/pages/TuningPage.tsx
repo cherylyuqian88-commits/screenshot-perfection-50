@@ -98,8 +98,8 @@ export default function TuningPage({ onNavigate }: Props) {
           </Card>
 
           <Card>
-            <PanelTitle title="调试记录">
-              <Btn onClick={() => toast("演示：查看全部调参记录")}>更多</Btn>
+            <PanelTitle title="调参记录">
+              <Btn onClick={() => onNavigate("patient-detail")}>更多</Btn>
             </PanelTitle>
             <div className="flex flex-col gap-2">
               {[
