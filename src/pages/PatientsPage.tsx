@@ -9,7 +9,11 @@ type Tab = "local" | "cross";
 
 const localUsers = [
   { name: "李某", id: "SZ202604120001", phone: "138****1234", gender: "男 / 58", org: "深圳爱眼低视力中心", device: "SN-20260301-0042", status: "本机构服务中", activity: "高", avgDuration: "4.2h", doctor: "陈医生", lastTuning: "2026-04-12 10:12" },
-  { name: "张某", id: "SZ202603180021", phone: "135****6620", gender: "男 / 63", org: "深圳爱眼低视力中心", device: "SN-20260218-0087", status: "本机构服务中", deviceWarn: true, activity: "中", avgDuration: "2.8h", doctor: "王医生", lastTuning: "2026-04-10 14:30" },
+  { name: "张某", id: "SZ202603180021", phone: "135****6620", gender: "男 / 63", org: "深圳爱眼低视力中心", device: "SN-20260218-0087", status: "本机构服务中", activity: "中", avgDuration: "2.8h", doctor: "王医生", lastTuning: "2026-04-10 14:30" },
+  { name: "赵某", id: "SZ202602250033", phone: "139****4478", gender: "女 / 71", org: "深圳爱眼低视力中心", device: "SN-20260115-0023", status: "本机构服务中", activity: "高", avgDuration: "3.6h", doctor: "陈医生", lastTuning: "2026-04-11 09:45" },
+  { name: "刘某", id: "SZ202601100045", phone: "136****8832", gender: "男 / 55", org: "深圳爱眼低视力中心", device: "SN-20251220-0061", status: "本机构服务中", activity: "低", avgDuration: "0.8h", doctor: "李医生", lastTuning: "2026-03-28 16:20" },
+  { name: "陈某", id: "SZ202603050052", phone: "158****2210", gender: "女 / 66", org: "深圳爱眼低视力中心", device: "SN-20260305-0099", status: "本机构服务中", activity: "中", avgDuration: "2.1h", doctor: "王医生", lastTuning: "2026-04-09 11:00" },
+  { name: "孙某", id: "SZ202604010060", phone: "133****7756", gender: "男 / 48", org: "深圳爱眼低视力中心", device: "SN-20260401-0110", status: "本机构服务中", activity: "高", avgDuration: "5.1h", doctor: "陈医生", lastTuning: "2026-04-12 08:30" },
 ];
 
 const crossUsers = [
@@ -60,10 +64,10 @@ export default function PatientsPage({ onNavigate }: Props) {
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.id}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.name}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.org}</td>
+                    <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.device}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">
-                      <Tag variant={(u as any).deviceWarn ? "warn" : undefined}>{u.device}</Tag>
+                      <Tag variant={u.activity === "高" ? "ok" : u.activity === "中" ? "info" : "danger"}>{u.activity}</Tag>
                     </td>
-                    <td className="px-4 py-3.5 border-b border-line text-[13px]">{(u as any).activity}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{(u as any).avgDuration}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{(u as any).doctor}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{(u as any).lastTuning}</td>
