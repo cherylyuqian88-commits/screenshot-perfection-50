@@ -36,31 +36,6 @@ export default function PatientsPage({ onNavigate }: Props) {
             </div>
           </PanelTitle>
 
-          {/* Tabs */}
-          <div className="flex gap-1 mb-4">
-            <button
-              onClick={() => { setTab("local"); setSelectedUser(localUsers[0]?.id || null); }}
-              className={cn(
-                "px-3.5 py-2 rounded-lg text-sm border-0 cursor-pointer transition-all",
-                tab === "local"
-                  ? "bg-gradient-to-r from-brand/20 to-brand-secondary/20 text-foreground font-semibold shadow-[inset_0_0_0_1px_hsl(197_92%_60%/0.25)]"
-                  : "bg-secondary text-soft hover:text-foreground"
-              )}
-            >
-              机构内当前关联用户
-            </button>
-            <button
-              onClick={() => { setTab("cross"); setSelectedUser(crossUsers[0]?.id || null); }}
-              className={cn(
-                "px-3.5 py-2 rounded-lg text-sm border-0 cursor-pointer transition-all",
-                tab === "cross"
-                  ? "bg-gradient-to-r from-brand/20 to-brand-secondary/20 text-foreground font-semibold shadow-[inset_0_0_0_1px_hsl(197_92%_60%/0.25)]"
-                  : "bg-secondary text-soft hover:text-foreground"
-              )}
-            >
-              跨机构查询用户
-            </button>
-          </div>
 
           {/* Table */}
           <TableWrap>
