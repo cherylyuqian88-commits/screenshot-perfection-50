@@ -1,4 +1,5 @@
-import { Card, Tag, PanelTitle, TableWrap } from "@/components/ui-parts";
+import { useState } from "react";
+import { Card, Tag, PanelTitle, Btn, TableWrap } from "@/components/ui-parts";
 
 interface Props { onNavigate: (page: string) => void; }
 
@@ -19,17 +20,22 @@ const resultTag = (r: string) => {
   return <Tag variant="danger">{r}</Tag>;
 };
 
+const PAGE_SIZE = 5;
+
 export default function RecordsPage({ onNavigate }: Props) {
+  const [page, setPage] = useState(1);
+  const totalPages = Math.ceil(records.length / PAGE_SIZE);
+  const paged = records.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
   return (
     <div className="animate-fade-in">
       <Card>
-        <PanelTitle title="调参记录" />
-
-        <div className="flex items-center gap-2.5 flex-wrap mb-4">
-          <input className="border border-line rounded-[14px] bg-card px-3.5 py-3 text-foreground outline-none max-w-[220px] text-sm" placeholder="用户姓名 / 用户ID" />
-          <input className="border border-line rounded-[14px] bg-card px-3.5 py-3 text-foreground outline-none max-w-[180px] text-sm" defaultValue="2026-04-01" />
-          <input className="border border-line rounded-[14px] bg-card px-3.5 py-3 text-foreground outline-none max-w-[180px] text-sm" defaultValue="2026-04-12" />
-        </div>
+        <PanelTitle title="调参记录">
+          <div className="flex items-center gap-2">
+            <input className="border border-line rounded-[14px] bg-card px-3.5 py-2 text-foreground outline-none w-[200px] text-sm" placeholder="用户姓名 / 用户ID" />
+            <Btn>搜索</Btn>
+          </div>
+        </PanelTitle>
 
         <TableWrap>
           <table className="w-full border-collapse min-w-[980px]">
@@ -41,7 +47,7 @@ export default function RecordsPage({ onNavigate }: Props) {
               </tr>
             </thead>
             <tbody>
-              {records.map((r, i) => (
+              {paged.map((r, i) => (
                 <tr key={i} className="hover:bg-secondary/60 transition-colors">
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{r.time}</td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{r.sn}</td>
@@ -55,6 +61,35 @@ export default function RecordsPage({ onNavigate }: Props) {
             </tbody>
           </table>
         </TableWrap>
+
+        <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
+          <span>共 {records.length} 条记录</span>
+          <div className="flex items-center gap-1.5">
+            <button
+              disabled={page <= 1}
+              onClick={() => setPage(p => p - 1)}
+              className="px-3 py-1.5 rounded-lg border border-line bg-card text-foreground text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-secondary transition-colors"
+            >
+              上一页
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => setPage(i + 1)}
+                className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${page === i + 1 ? "bg-primary text-primary-foreground" : "border border-line bg-card text-foreground hover:bg-secondary"}`}
+              >
+                {i + 1}
+              </button>
+            ))}
+            <button
+              disabled={page >= totalPages}
+              onClick={() => setPage(p => p + 1)}
+              className="px-3 py-1.5 rounded-lg border border-line bg-card text-foreground text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-secondary transition-colors"
+            >
+              下一页
+            </button>
+          </div>
+        </div>
       </Card>
     </div>
   );
