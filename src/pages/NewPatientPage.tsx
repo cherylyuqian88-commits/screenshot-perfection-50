@@ -77,8 +77,8 @@ export default function NewPatientPage({ onNavigate }: Props) {
               </tbody>
             </table>
           </TableWrap>
-          <div className="flex justify-end mt-4">
-            <Btn variant="primary" onClick={() => { setOpen(false); onNavigate("tuning"); }}>直接新建</Btn>
+          <div className="flex justify-center mt-4">
+            <Btn variant="primary" onClick={() => { setOpen(false); onNavigate("tuning"); }}>重新新建</Btn>
           </div>
         </DialogContent>
       </Dialog>
