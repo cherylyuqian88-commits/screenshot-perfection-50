@@ -42,7 +42,7 @@ export default function PatientsPage({ onNavigate }: Props) {
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  {["用户ID","姓名","关联机构","关联设备","活跃度","近7天日均时长"].map(h => (
+                  {["用户ID","姓名","关联机构","关联设备","活跃度","近7天日均时长","医生","最近调参时间"].map(h => (
                     <th key={h} className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1]">{h}</th>
                   ))}
                 </tr>
