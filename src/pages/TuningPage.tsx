@@ -17,11 +17,7 @@ export default function TuningPage({ onNavigate }: Props) {
           <div className="px-4 py-3.5 border-b border-white/[0.08] flex justify-between items-center text-primary-foreground">
             <div>
               <div className="text-lg font-extrabold">调参工作区</div>
-              <div className="text-xs text-sidebar-muted mt-1">
-                {connected
-                  ? "此区域后续可替换为实时画面、参数调节控件、视野补偿示意图和保存面板"
-                  : "请先连接设备，完成兼容校验后进入调参"}
-              </div>
+              {!connected && <div className="text-xs text-sidebar-muted mt-1">请先连接设备，完成兼容校验后进入调参</div>}
             </div>
             <div className="flex gap-2 items-center">
               {connected ? (
@@ -56,7 +52,7 @@ export default function TuningPage({ onNavigate }: Props) {
                   { label: "预设模板 A" },
                   { label: "预设模板 B" },
                 ].map((b) => (
-                  <button key={b.label} onClick={b.action} className="bg-white/[0.08] text-primary-foreground border border-white/10 px-3.5 py-2.5 rounded-xl font-bold cursor-pointer text-sm hover:bg-white/[0.12] transition-all">
+                  <button key={b.label} className="bg-white/[0.08] text-primary-foreground border border-white/10 px-3.5 py-2.5 rounded-xl font-bold cursor-pointer text-sm hover:bg-white/[0.12] transition-all">
                     {b.label}
                   </button>
                 ))}
