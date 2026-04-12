@@ -25,7 +25,7 @@ export default function NewPatientPage({ onNavigate }: Props) {
               { label: "年龄", val: "58" },
               { label: "手机号", val: "13800001234" },
               { label: "身份证后 4 位", val: "4821" },
-              { label: "备注", val: "首次到院验配" },
+              { label: "备注", val: "黄斑变性" },
             ].map((f) => (
               <div key={f.label} className="flex flex-col gap-2">
                 <label className="text-[13px] text-soft font-semibold">{f.label}</label>
