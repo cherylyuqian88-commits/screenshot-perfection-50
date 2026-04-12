@@ -22,7 +22,7 @@ export default function PatientRecordsPage({ onNavigate }: Props) {
           <table className="w-full border-collapse">
             <thead>
               <tr>
-                {["设备SN", "参数模板", "执行医生", "结果", "同步状态", "时间"].map((h) => (
+                {["记录时间", "设备SN", "参数名称", "执行医生", "结果", "同步状态"].map((h) => (
                   <th key={h} className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1]">{h}</th>
                 ))}
               </tr>
@@ -30,6 +30,7 @@ export default function PatientRecordsPage({ onNavigate }: Props) {
             <tbody>
               {records.map((r, i) => (
                 <tr key={i} className="hover:bg-secondary/60 transition-colors">
+                  <td className="px-4 py-3.5 border-b border-line text-[13px]">{r.time}</td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{r.device}</td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{r.template}</td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{r.doctor}</td>
@@ -39,7 +40,6 @@ export default function PatientRecordsPage({ onNavigate }: Props) {
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">
                     <Tag variant={r.sync === "已同步" ? "ok" : "warn"}>{r.sync}</Tag>
                   </td>
-                  <td className="px-4 py-3.5 border-b border-line text-[13px]">{r.time}</td>
                 </tr>
               ))}
             </tbody>
