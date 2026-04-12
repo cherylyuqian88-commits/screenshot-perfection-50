@@ -8,16 +8,16 @@ interface Props { onNavigate: (page: string) => void; }
 type Tab = "local" | "cross";
 
 const localUsers = [
-  { name: "李某", id: "SZ202604120001", phone: "138****1234", gender: "男 / 58", org: "深圳爱眼低视力中心", device: "SN-20260301-0042", status: "本机构服务中", activity: "高", avgDuration: "4.2h", doctor: "陈医生", lastTuning: "2026-04-12 10:12" },
-  { name: "张某", id: "SZ202603180021", phone: "135****6620", gender: "男 / 63", org: "深圳爱眼低视力中心", device: "SN-20260218-0087", status: "本机构服务中", activity: "中", avgDuration: "2.8h", doctor: "王医生", lastTuning: "2026-04-10 14:30" },
-  { name: "赵某", id: "SZ202602250033", phone: "139****4478", gender: "女 / 71", org: "深圳爱眼低视力中心", device: "SN-20260115-0023", status: "本机构服务中", activity: "高", avgDuration: "3.6h", doctor: "陈医生", lastTuning: "2026-04-11 09:45" },
-  { name: "刘某", id: "SZ202601100045", phone: "136****8832", gender: "男 / 55", org: "深圳爱眼低视力中心", device: "SN-20251220-0061", status: "本机构服务中", activity: "低", avgDuration: "0.8h", doctor: "李医生", lastTuning: "2026-03-28 16:20" },
-  { name: "陈某", id: "SZ202603050052", phone: "158****2210", gender: "女 / 66", org: "深圳爱眼低视力中心", device: "SN-20260305-0099", status: "本机构服务中", activity: "中", avgDuration: "2.1h", doctor: "王医生", lastTuning: "2026-04-09 11:00" },
-  { name: "孙某", id: "SZ202604010060", phone: "133****7756", gender: "男 / 48", org: "深圳爱眼低视力中心", device: "SN-20260401-0110", status: "本机构服务中", activity: "高", avgDuration: "5.1h", doctor: "陈医生", lastTuning: "2026-04-12 08:30" },
+  { name: "李某", id: "SZ202604120001", phone: "138****1234", gender: "男 / 58", idLast4: "4821", org: "深圳爱眼低视力中心", device: "SN-20260301-0042", status: "本机构服务中", activity: "高", avgDuration: "4.2h", doctor: "陈医生", lastTuning: "2026-04-12 10:12" },
+  { name: "张某", id: "SZ202603180021", phone: "135****6620", gender: "男 / 63", idLast4: "7735", org: "深圳爱眼低视力中心", device: "SN-20260218-0087", status: "本机构服务中", activity: "中", avgDuration: "2.8h", doctor: "王医生", lastTuning: "2026-04-10 14:30" },
+  { name: "赵某", id: "SZ202602250033", phone: "139****4478", gender: "女 / 71", idLast4: "1190", org: "深圳爱眼低视力中心", device: "SN-20260115-0023", status: "本机构服务中", activity: "高", avgDuration: "3.6h", doctor: "陈医生", lastTuning: "2026-04-11 09:45" },
+  { name: "刘某", id: "SZ202601100045", phone: "136****8832", gender: "男 / 55", idLast4: "6603", org: "深圳爱眼低视力中心", device: "SN-20251220-0061", status: "本机构服务中", activity: "低", avgDuration: "0.8h", doctor: "李医生", lastTuning: "2026-03-28 16:20" },
+  { name: "陈某", id: "SZ202603050052", phone: "158****2210", gender: "女 / 66", idLast4: "5528", org: "深圳爱眼低视力中心", device: "SN-20260305-0099", status: "本机构服务中", activity: "中", avgDuration: "2.1h", doctor: "王医生", lastTuning: "2026-04-09 11:00" },
+  { name: "孙某", id: "SZ202604010060", phone: "133****7756", gender: "男 / 48", idLast4: "3341", org: "深圳爱眼低视力中心", device: "SN-20260401-0110", status: "本机构服务中", activity: "高", avgDuration: "5.1h", doctor: "陈医生", lastTuning: "2026-04-12 08:30" },
 ];
 
 const crossUsers = [
-  { name: "王某", id: "HZ202603030014", phone: "137****9981", gender: "女 / 49", org: "杭州康复门诊", device: "未显示", status: "待建立关系", isCross: true, activity: "低", avgDuration: "0.5h", doctor: "—", lastTuning: "—" },
+  { name: "王某", id: "HZ202603030014", phone: "137****9981", gender: "女 / 49", idLast4: "—", org: "杭州康复门诊", device: "未显示", status: "待建立关系", isCross: true, activity: "低", avgDuration: "0.5h", doctor: "—", lastTuning: "—" },
 ];
 
 export default function PatientsPage({ onNavigate }: Props) {
@@ -85,16 +85,17 @@ export default function PatientsPage({ onNavigate }: Props) {
               <Card>
                 <PanelTitle title="用户详情">
                   <div className="flex gap-2">
-                    <Btn onClick={() => onNavigate("records")}>调参记录</Btn>
-                    <Btn variant="primary" onClick={() => onNavigate("tuning")}>编辑</Btn>
+                    <Btn onClick={() => onNavigate("patient-records")}>调参记录</Btn>
+                    <Btn variant="primary" onClick={() => onNavigate("patient-edit")}>编辑</Btn>
                   </div>
                 </PanelTitle>
                 <KV label="姓名" value={detail.name} />
                 <KV label="用户ID" value={detail.id} />
                 <KV label="手机号" value={detail.phone} />
                 <KV label="性别 / 年龄" value={detail.gender} />
+                <KV label="身份证后4位" value={detail.idLast4} />
                 <KV label="关联机构" value={detail.org} />
-                <KV label="关联设备" value={<Tag variant={(detail as any).deviceWarn ? "warn" : undefined}>{detail.device}</Tag>} />
+                <KV label="关联设备" value={detail.device} />
               </Card>
 
               <Card>
