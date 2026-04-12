@@ -111,8 +111,8 @@ export default function PatientsPage({ onNavigate }: Props) {
                 <KV label="手机号" value={detail.phone} />
                 <KV label="性别 / 年龄" value={detail.gender} />
                 <KV label="身份证后4位" value={detail.idLast4} />
-                <KV label="关联机构" value={<span className="flex items-center gap-1.5 whitespace-nowrap">{detail.org}<button onClick={() => toast("演示：查看机构变更记录")} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">变更记录</button></span>} />
-                <KV label="关联设备" value={<span className="flex items-center gap-1.5 whitespace-nowrap">{detail.device}<button onClick={() => onNavigate("device-link")} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">变更记录</button></span>} />
+                <KV label="关联机构" value={<span className="flex items-center justify-between w-full whitespace-nowrap">{detail.org}<button onClick={() => toast("演示：查看机构变更记录")} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors ml-auto">变更记录</button></span>} />
+                <KV label="关联设备" value={<span className="flex items-center justify-between w-full whitespace-nowrap">{detail.device}<button onClick={() => onNavigate("device-link")} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors ml-auto">变更记录</button></span>} />
               </Card>
 
               <Card>
