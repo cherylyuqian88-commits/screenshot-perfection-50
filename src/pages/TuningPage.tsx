@@ -23,7 +23,7 @@ export default function TuningPage({ onNavigate }: Props) {
               {connected ? (
                 <>
                   <span className="text-xs text-sidebar-foreground/60 mr-1">RX-A102 / 9A24 / V0.5.1</span>
-                  <span className="text-xs text-accent bg-primary-foreground px-1.5 py-0.5 rounded">USB · 电量 82%</span>
+                  <span className="text-xs px-1.5 py-0.5 rounded bg-[#0f1729] text-[#2ce2e2]">USB · 电量 82%</span>
                   <Tag variant="info">已连接</Tag>
                 </>
               ) : (
@@ -86,7 +86,7 @@ export default function TuningPage({ onNavigate }: Props) {
           <Card>
             <PanelTitle title="关联用户">
               <Btn 
-                className="border-none bg-secondary text-accent-foreground opacity-65"
+                className="text-accent-foreground opacity-65 bg-[#eff4fa] border border-solid border-[#39404c]/[0.59]"
                 onClick={() => toast("演示：替换当前关联用户")}
               >
                 替换用户
@@ -111,7 +111,7 @@ export default function TuningPage({ onNavigate }: Props) {
               ].map((r, i) => (
                 <div key={i} className="flex items-center justify-between text-xs py-1.5 border-b border-border/50 last:border-0">
                   <div className="text-foreground/80">
-                    <span className="text-muted-foreground mr-2">SN {r.sn}</span>
+                    <span className="text-muted-foreground block mb-0.5">SN {r.sn}</span>
                     {r.date}
                   </div>
                   <Btn onClick={() => toast(`演示：调取 ${r.date} 的调参记录`)}>调取</Btn>
