@@ -30,6 +30,8 @@ const PAGE_SIZE = 5;
 
 export default function RecordsPage({ onNavigate }: Props) {
   const [page, setPage] = useState(1);
+  const [startDate, setStartDate] = useState<Date | undefined>(new Date("2026-04-01"));
+  const [endDate, setEndDate] = useState<Date | undefined>(new Date("2026-04-12"));
   const totalPages = Math.ceil(records.length / PAGE_SIZE);
   const paged = records.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
