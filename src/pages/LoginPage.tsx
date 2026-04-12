@@ -80,20 +80,6 @@ export default function LoginPage({ onLogin }: Props) {
             登录进入医生端
           </button>
 
-          <div className="flex gap-2.5 mt-3">
-            <button
-              onClick={() => toast("演示说明：机构管理员创建医生账号后，医生使用账号密码登录。")}
-              className="flex-1 rounded-[14px] bg-card border border-line px-4 py-2.5 text-sm font-bold cursor-pointer hover:-translate-y-px transition-all"
-            >
-              查看说明
-            </button>
-            <button
-              onClick={() => toast("演示说明：密码错误累计 5 次将触发禁用逻辑。")}
-              className="flex-1 rounded-[14px] bg-card border border-line px-4 py-2.5 text-sm font-bold cursor-pointer hover:-translate-y-px transition-all"
-            >
-              登录异常处理
-            </button>
-          </div>
         </div>
       </div>
     </div>
