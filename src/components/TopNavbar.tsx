@@ -15,7 +15,6 @@ const navGroups: { title: string; items: NavItem[] }[] = [
   {
     title: "设备与调参",
     items: [
-      { key: "device-link", label: "设备连接" },
       { key: "tuning", label: "调参工作区" },
       { key: "records", label: "调参记录" },
     ],
