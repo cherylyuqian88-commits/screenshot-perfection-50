@@ -40,7 +40,7 @@ export default function PatientDetailPage({ onNavigate }: Props) {
       </div>
 
       <Card className="mt-4">
-        <PanelTitle title="历史记录"><Btn onClick={() => onNavigate("institution")}>查看机构变更</Btn></PanelTitle>
+        <PanelTitle title="历史记录" />
         <TableWrap>
           <table className="w-full border-collapse">
             <thead>

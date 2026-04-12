@@ -29,7 +29,7 @@ export default function PatientsPage({ onNavigate }: Props) {
 
   return (
     <div className="animate-fade-in h-full flex flex-col">
-      <div className="grid grid-cols-[1fr_380px] gap-4 flex-1 min-h-0 max-xl:grid-cols-1">
+      <div className="grid grid-cols-[1fr_440px] gap-4 flex-1 min-h-0 max-xl:grid-cols-1">
         {/* Left: user list */}
         <Card className="flex flex-col min-h-0">
           <PanelTitle title="用户列表">
@@ -111,8 +111,8 @@ export default function PatientsPage({ onNavigate }: Props) {
                 <KV label="手机号" value={detail.phone} />
                 <KV label="性别 / 年龄" value={detail.gender} />
                 <KV label="身份证后4位" value={detail.idLast4} />
-                <KV label="关联机构" value={<span className="flex items-center gap-2">{detail.org}<Btn onClick={() => onNavigate("institution")}>变更记录</Btn></span>} />
-                <KV label="关联设备" value={<span className="flex items-center gap-2">{detail.device}<Btn onClick={() => onNavigate("device-link")}>变更记录</Btn></span>} />
+                <KV label="关联机构" value={<span className="flex items-center gap-1.5 whitespace-nowrap">{detail.org}<button onClick={() => toast("演示：查看机构变更记录")} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">变更记录</button></span>} />
+                <KV label="关联设备" value={<span className="flex items-center gap-1.5 whitespace-nowrap">{detail.device}<button onClick={() => onNavigate("device-link")} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">变更记录</button></span>} />
               </Card>
 
               <Card>

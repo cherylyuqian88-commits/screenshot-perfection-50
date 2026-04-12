@@ -22,7 +22,7 @@ const navGroups: { title: string; items: NavItem[] }[] = [
   {
     title: "追溯与设置",
     items: [
-      { key: "institution", label: "机构变更记录" },
+      
       { key: "account", label: "我的账号" },
     ],
   },
