@@ -28,33 +28,31 @@ export default function RecordsPage({ onNavigate }: Props) {
           <table className="w-full border-collapse min-w-[980px]">
             <thead>
               <tr>
-                {["时间","用户","用户ID","设备SN","参数模板","医生","云端同步","结果","操作"].map(h => (
+                {["设备SN","用户","用户ID","参数模板","医生","云端同步","结果","时间"].map(h => (
                   <th key={h} className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1]">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">2026-04-12 10:12</td>
+                <td className="px-4 py-3.5 border-b border-line text-[13px]">9A24</td>
                 <td className="px-4 py-3.5 border-b border-line text-[13px]">李某</td>
                 <td className="px-4 py-3.5 border-b border-line text-[13px]">SZ202604120001</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">9A24</td>
                 <td className="px-4 py-3.5 border-b border-line text-[13px]">PT-2026-04</td>
                 <td className="px-4 py-3.5 border-b border-line text-[13px]">陈医生</td>
                 <td className="px-4 py-3.5 border-b border-line text-[13px]"><Tag>成功</Tag></td>
                 <td className="px-4 py-3.5 border-b border-line text-[13px]"><Tag>已保存</Tag></td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]"><Btn onClick={() => toast("演示：查看参数详情与版本信息。")}>查看详情</Btn></td>
+                <td className="px-4 py-3.5 border-b border-line text-[13px]">2026-04-12 10:12</td>
               </tr>
               <tr>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">2026-04-12 09:43</td>
+                <td className="px-4 py-3.5 border-b border-line text-[13px]">71F2</td>
                 <td className="px-4 py-3.5 border-b border-line text-[13px]">张某</td>
                 <td className="px-4 py-3.5 border-b border-line text-[13px]">SZ202603180021</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">71F2</td>
                 <td className="px-4 py-3.5 border-b border-line text-[13px]">PT-2026-04</td>
                 <td className="px-4 py-3.5 border-b border-line text-[13px]">陈医生</td>
                 <td className="px-4 py-3.5 border-b border-line text-[13px]"><Tag variant="gray">未同步</Tag></td>
                 <td className="px-4 py-3.5 border-b border-line text-[13px]"><Tag variant="danger">兼容拦截</Tag></td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]"><Btn onClick={() => toast("版本不兼容时仅允许查看，不允许保存。")}>拦截原因</Btn></td>
+                <td className="px-4 py-3.5 border-b border-line text-[13px]">2026-04-12 09:43</td>
               </tr>
             </tbody>
           </table>
