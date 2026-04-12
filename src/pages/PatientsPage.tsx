@@ -29,10 +29,7 @@ export default function PatientsPage({ onNavigate }: Props) {
         {/* Left: user list */}
         <Card className="flex flex-col min-h-0">
           <PanelTitle title="用户列表">
-            <div className="flex gap-2">
-              <Btn onClick={() => toast("演示说明：跨机构用户未建立本机构服务关系前，仅可查看脱敏字段。")}>跨机构查看规则</Btn>
-              <Btn variant="primary" onClick={() => onNavigate("new-patient")}>新建用户</Btn>
-            </div>
+            <Btn variant="primary" onClick={() => onNavigate("new-patient")}>新建用户</Btn>
           </PanelTitle>
 
           {/* Tabs */}
@@ -64,9 +61,6 @@ export default function PatientsPage({ onNavigate }: Props) {
           {/* Filters */}
           <div className="flex items-center gap-2.5 flex-wrap mb-4">
             <input className="border border-line rounded-[14px] bg-card px-3.5 py-3 text-foreground outline-none max-w-[260px] text-sm focus:border-brand focus:shadow-[0_0_0_4px_hsl(197_92%_60%/0.12)]" placeholder="搜索姓名 / 手机号 / 用户ID" defaultValue="李" />
-            <select className="border border-line rounded-[14px] bg-card px-3.5 py-3 text-foreground outline-none max-w-[180px] text-sm">
-              <option>全部设备状态</option><option>已连接设备</option><option>未关联设备</option>
-            </select>
             <Btn onClick={() => toast("演示搜索：若手机号重复，将优先提示复用云端用户档案。")}>查询</Btn>
           </div>
 
@@ -98,18 +92,6 @@ export default function PatientsPage({ onNavigate }: Props) {
                     </td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{(u as any).activity}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{(u as any).avgDuration}</td>
-                    <td className="px-4 py-3.5 border-b border-line text-[13px]">
-                      <div className="flex gap-2">
-                        {tab === "local" ? (
-                          <>
-                            <Btn onClick={() => setSelectedUser(u.id)}>详情</Btn>
-                            <Btn variant="ghost" onClick={() => onNavigate("tuning")}>调参</Btn>
-                          </>
-                        ) : (
-                          <Btn variant="primary" onClick={() => toast("演示：建立本机构服务关系后，才可读取完整必要信息。")}>建立关系</Btn>
-                        )}
-                      </div>
-                    </td>
                   </tr>
                 ))}
               </tbody>
