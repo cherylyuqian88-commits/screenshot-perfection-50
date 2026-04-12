@@ -12,8 +12,7 @@ const menuGroups: { title: string; items: NavItem[] }[] = [
     items: [
       { key: "dashboard", label: "首页看板", num: "01" },
       { key: "patients", label: "患者列表", num: "02" },
-      { key: "new-patient", label: "新建患者", num: "03" },
-      { key: "patient-detail", label: "患者详情", num: "04" },
+      { key: "patient-detail", label: "患者详情", num: "03" },
     ],
   },
   {
