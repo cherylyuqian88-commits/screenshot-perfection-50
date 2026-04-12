@@ -17,7 +17,7 @@ const pageMeta: Record<string, { title: string; desc: string }> = {
   tuning: { title: "调参工作区", desc: "全屏主工作区用于后续放置实时画面、参数控件和保存逻辑；右侧固定展示关联用户信息" },
   records: { title: "调参记录", desc: "查看历史调参记录、同步结果、兼容拦截原因与追溯详情" },
   institution: { title: "机构变更记录", desc: "查看用户服务机构切换记录，并明确当前服务机构的计算口径" },
-  account: { title: "我的账号", desc: "查看当前登录医生账号信息、权限边界与密码修改入口" },
+  account: { title: "我的账号", desc: "查看当前登录医生账号信息与密码修改入口" },
 };
 
 export default function Index() {
