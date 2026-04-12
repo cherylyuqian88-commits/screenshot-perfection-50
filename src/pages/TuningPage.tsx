@@ -119,6 +119,8 @@ export default function TuningPage({ onNavigate }: Props) {
               ))}
             </div>
           </Card>
+
+          <Btn onClick={() => toast("演示：已删除关联用户")} className="w-full text-center justify-center text-destructive border-destructive/30 hover:bg-destructive/10">删除关联用户</Btn>
         </div>
       </div>
 
