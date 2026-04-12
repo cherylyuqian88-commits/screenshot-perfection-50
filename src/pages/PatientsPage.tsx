@@ -65,6 +65,8 @@ export default function PatientsPage({ onNavigate }: Props) {
                     </td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{(u as any).activity}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{(u as any).avgDuration}</td>
+                    <td className="px-4 py-3.5 border-b border-line text-[13px]">{(u as any).doctor}</td>
+                    <td className="px-4 py-3.5 border-b border-line text-[13px]">{(u as any).lastTuning}</td>
                   </tr>
                 ))}
               </tbody>
