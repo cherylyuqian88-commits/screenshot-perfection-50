@@ -47,8 +47,8 @@ export default function AppSidebar({ activePage, onNavigate }: Props) {
           RX
         </div>
         <div>
-          <div className="text-base font-bold">睿芯仿生眼 PC</div>
-          <div className="text-xs text-sidebar-muted mt-0.5">医生端 / Windows 原型</div>
+          <div className="text-base font-bold">睿芯仿生眼</div>
+          <div className="text-xs text-sidebar-muted mt-0.5">医生端</div>
         </div>
       </div>
 
