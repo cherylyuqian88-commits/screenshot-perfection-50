@@ -132,7 +132,7 @@ export default function TuningPage({ onNavigate }: Props) {
           <div className="flex flex-col gap-1 mt-2">
             <KV label="PC 客户端版本" value="V0.2.0" />
             <KV label="控制盒固件版本" value="V0.5.1" />
-            <KV label="参数模板版本" value="PT-2026-04" />
+            <KV label="设备编码" value="SN-XXX" />
             <KV label="兼容结果" value={<span className="flex items-center gap-1.5"><Tag>通过</Tag>/<Tag variant="warn">高风险拦截</Tag></span>} />
           </div>
           <div className="flex justify-end mt-4">
