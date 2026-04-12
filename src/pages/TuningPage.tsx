@@ -1,9 +1,14 @@
+import { useState } from "react";
 import { toast } from "sonner";
 import { Card, Tag, PanelTitle, KV, TimelineItem, Btn } from "@/components/ui-parts";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 interface Props { onNavigate: (page: string) => void; }
 
 export default function TuningPage({ onNavigate }: Props) {
+  const [connected, setConnected] = useState(false);
+  const [showCompat, setShowCompat] = useState(false);
+
   return (
     <div className="animate-fade-in">
       <div className="h-[calc(100vh-120px)] grid grid-cols-[1fr_360px] gap-4 max-xl:grid-cols-1 max-xl:h-auto">
@@ -12,49 +17,98 @@ export default function TuningPage({ onNavigate }: Props) {
           <div className="px-4 py-3.5 border-b border-white/[0.08] flex justify-between items-center text-primary-foreground">
             <div>
               <div className="text-lg font-extrabold">调参工作区</div>
-              <div className="text-xs text-sidebar-muted mt-1">此区域后续可替换为实时画面、参数调节控件、视野补偿示意图和保存面板</div>
-            </div>
-            <div className="flex gap-2">
-              <Tag>兼容通过</Tag>
-              <Tag variant="info">控制盒 RX-A102</Tag>
-            </div>
-          </div>
-
-          <div className="flex-1 grid place-items-center text-primary-foreground text-center p-8"
-            style={{
-              background: "radial-gradient(circle at 50% 50%, hsl(197 92% 60% / 0.15), transparent 34%), linear-gradient(180deg, hsl(224 76% 48% / 0.08), transparent 40%)"
-            }}
-          >
-            <div>
-              <div className="text-[38px] font-extrabold mb-3 tracking-wide">调参界面占位区</div>
-              <div className="text-[15px] text-sidebar-foreground/70 max-w-[640px] leading-[1.8]">
-                后续这里可放：实时取景 / 视野补偿范围示意 / 参数滑杆 / 预设模板 / 保存与回退按钮。当前先确保页面结构完整，且调参区域占据画面主工作区。
+              <div className="text-xs text-sidebar-muted mt-1">
+                {connected
+                  ? "此区域后续可替换为实时画面、参数调节控件、视野补偿示意图和保存面板"
+                  : "请先连接设备，完成兼容校验后进入调参"}
               </div>
             </div>
+            <div className="flex gap-2">
+              {connected ? (
+                <>
+                  <Tag>兼容通过</Tag>
+                  <Tag variant="info">控制盒 RX-A102</Tag>
+                </>
+              ) : (
+                <Tag variant="warn">未连接设备</Tag>
+              )}
+            </div>
           </div>
 
-          <div className="px-4 py-3.5 border-t border-white/[0.08] flex gap-2.5 flex-wrap">
-            {[
-              { label: "读取历史可恢复配置", action: () => toast("演示：用户侧只提示存在可恢复配置，真正恢复需医生端下发且校验通过。") },
-              { label: "预设模板 A" },
-              { label: "预设模板 B" },
-              { label: "对比查看" },
-            ].map((b) => (
-              <button key={b.label} onClick={b.action} className="bg-white/[0.08] text-primary-foreground border border-white/10 px-3.5 py-2.5 rounded-xl font-bold cursor-pointer text-sm hover:bg-white/[0.12] transition-all">
-                {b.label}
-              </button>
-            ))}
-            <button
-              onClick={() => toast("演示：保存时会同时写入控制盒与云端记录。")}
-              className="bg-gradient-to-r from-[hsl(199,89%,49%)] to-[hsl(224,76%,48%)] text-primary-foreground border-0 px-3.5 py-2.5 rounded-xl font-bold cursor-pointer text-sm"
-            >
-              保存当前参数
-            </button>
-          </div>
+          {connected ? (
+            <>
+              <div className="flex-1 grid place-items-center text-primary-foreground text-center p-8"
+                style={{
+                  background: "radial-gradient(circle at 50% 50%, hsl(197 92% 60% / 0.15), transparent 34%), linear-gradient(180deg, hsl(224 76% 48% / 0.08), transparent 40%)"
+                }}
+              >
+                <div>
+                  <div className="text-[38px] font-extrabold mb-3 tracking-wide">调参界面占位区</div>
+                  <div className="text-[15px] text-sidebar-foreground/70 max-w-[640px] leading-[1.8]">
+                    后续这里可放：实时取景 / 视野补偿范围示意 / 参数滑杆 / 预设模板 / 保存与回退按钮。
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-4 py-3.5 border-t border-white/[0.08] flex gap-2.5 flex-wrap">
+                {[
+                  { label: "读取历史可恢复配置", action: () => toast("演示：用户侧只提示存在可恢复配置，真正恢复需医生端下发且校验通过。") },
+                  { label: "预设模板 A" },
+                  { label: "预设模板 B" },
+                  { label: "对比查看" },
+                ].map((b) => (
+                  <button key={b.label} onClick={b.action} className="bg-white/[0.08] text-primary-foreground border border-white/10 px-3.5 py-2.5 rounded-xl font-bold cursor-pointer text-sm hover:bg-white/[0.12] transition-all">
+                    {b.label}
+                  </button>
+                ))}
+                <button
+                  onClick={() => toast("演示：保存时会同时写入控制盒与云端记录。")}
+                  className="bg-gradient-to-r from-[hsl(199,89%,49%)] to-[hsl(224,76%,48%)] text-primary-foreground border-0 px-3.5 py-2.5 rounded-xl font-bold cursor-pointer text-sm"
+                >
+                  保存当前参数
+                </button>
+                <button
+                  onClick={() => { setConnected(false); toast("设备已断开连接"); }}
+                  className="bg-white/[0.08] text-primary-foreground border border-white/10 px-3.5 py-2.5 rounded-xl font-bold cursor-pointer text-sm hover:bg-white/[0.12] transition-all ml-auto"
+                >
+                  断开设备
+                </button>
+              </div>
+            </>
+          ) : (
+            /* 未连接设备状态 */
+            <div className="flex-1 grid place-items-center text-primary-foreground text-center p-8 relative">
+              <div>
+                <div className="text-[13px] text-sidebar-foreground/70 leading-relaxed mb-5 max-w-[520px]">
+                  统一设备定义：整套设备 = 眼镜 + 控制盒；PC端有线接入对象与日志、参数存储位置均为控制盒。
+                </div>
+                <div className="flex flex-col gap-3 items-center mb-6">
+                  <TimelineItem dark title="当前识别设备" desc="控制盒 RX-A102 / SN 9A24 / 固件 V0.5.1" />
+                  <TimelineItem dark title="连接状态" desc="等待 USB 连接…" />
+                </div>
+                <div className="flex gap-2.5 justify-center flex-wrap">
+                  <Btn variant="primary" onClick={() => setShowCompat(true)}>连接设备</Btn>
+                  <Btn onClick={() => toast("演示：若设备连接失败，提示检查数据线 / 开机状态。")}>连接异常处理</Btn>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Side panel */}
         <div className="flex flex-col gap-4 min-w-0">
+          {connected && (
+            <Card>
+              <PanelTitle title="设备状态"><Tag variant="info">已连接</Tag></PanelTitle>
+              <KV label="设备型号" value="控制盒 RX-A102" />
+              <KV label="设备SN" value="9A24" />
+              <KV label="固件版本" value="V0.5.1" />
+              <KV label="电量" value="82%" />
+              <KV label="连接方式" value="USB 有线" />
+              <KV label="网络状态" value="正常" />
+            </Card>
+          )}
+
           <Card>
             <PanelTitle title="关联用户信息"><Btn onClick={() => onNavigate("patients")}>详情</Btn></PanelTitle>
             <KV label="姓名" value="李某" />
@@ -87,6 +141,27 @@ export default function TuningPage({ onNavigate }: Props) {
           </Card>
         </div>
       </div>
+
+      {/* 兼容校验弹窗 */}
+      <Dialog open={showCompat} onOpenChange={setShowCompat}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">兼容校验 <Tag variant="warn">高风险拦截</Tag></DialogTitle>
+            <DialogDescription>连接前需确认各版本兼容</DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-1 mt-2">
+            <KV label="PC 客户端版本" value="V0.2.0" />
+            <KV label="控制盒固件版本" value="V0.5.1" />
+            <KV label="参数模板版本" value="PT-2026-04" />
+            <KV label="兼容结果" value={<Tag>通过</Tag>} />
+          </div>
+          <div className="flex justify-end mt-4">
+            <Btn variant="primary" onClick={() => { setShowCompat(false); setConnected(true); toast("设备连接成功，已进入调参工作区"); }}>
+              确认连接设备
+            </Btn>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
