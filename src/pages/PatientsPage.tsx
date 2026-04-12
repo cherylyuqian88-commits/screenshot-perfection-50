@@ -111,8 +111,8 @@ export default function PatientsPage({ onNavigate }: Props) {
                 <KV label="手机号" value={detail.phone} />
                 <KV label="性别 / 年龄" value={detail.gender} />
                 <KV label="身份证后4位" value={detail.idLast4} />
-                <KV label="关联机构" value={detail.org} />
-                <KV label="关联设备" value={detail.device} />
+                <KV label="关联机构" value={<span className="flex items-center gap-2">{detail.org}<Btn onClick={() => onNavigate("institution")}>变更记录</Btn></span>} />
+                <KV label="关联设备" value={<span className="flex items-center gap-2">{detail.device}<Btn onClick={() => onNavigate("device-link")}>变更记录</Btn></span>} />
               </Card>
 
               <Card>
