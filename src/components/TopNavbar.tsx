@@ -9,8 +9,7 @@ const navGroups: { title: string; items: NavItem[] }[] = [
   {
     title: "工作台",
     items: [
-      { key: "patients", label: "患者列表" },
-      { key: "patient-detail", label: "患者详情" },
+      { key: "patients", label: "用户列表" },
     ],
   },
   {

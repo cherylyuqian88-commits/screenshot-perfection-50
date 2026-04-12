@@ -9,13 +9,13 @@ export default function RecordsPage({ onNavigate }: Props) {
       <Card>
         <PanelTitle title="调参记录">
           <div className="flex gap-2">
-            <Btn onClick={() => toast("云端保留患者调参、关联、机构变更记录，用于追溯。")}>查看追溯规则</Btn>
+            <Btn onClick={() => toast("云端保留用户调参、关联、机构变更记录，用于追溯。")}>查看追溯规则</Btn>
             <Btn variant="primary" onClick={() => onNavigate("tuning")}>新建调参</Btn>
           </div>
         </PanelTitle>
 
         <div className="flex items-center gap-2.5 flex-wrap mb-4">
-          <input className="border border-line rounded-[14px] bg-card px-3.5 py-3 text-foreground outline-none max-w-[220px] text-sm" placeholder="患者姓名 / 用户ID" />
+          <input className="border border-line rounded-[14px] bg-card px-3.5 py-3 text-foreground outline-none max-w-[220px] text-sm" placeholder="用户姓名 / 用户ID" />
           <input className="border border-line rounded-[14px] bg-card px-3.5 py-3 text-foreground outline-none max-w-[180px] text-sm" defaultValue="2026-04-01" />
           <input className="border border-line rounded-[14px] bg-card px-3.5 py-3 text-foreground outline-none max-w-[180px] text-sm" defaultValue="2026-04-12" />
           <select className="border border-line rounded-[14px] bg-card px-3.5 py-3 text-foreground outline-none max-w-[180px] text-sm">
@@ -28,7 +28,7 @@ export default function RecordsPage({ onNavigate }: Props) {
           <table className="w-full border-collapse min-w-[980px]">
             <thead>
               <tr>
-                {["时间","患者","用户ID","设备SN","参数模板","医生","云端同步","结果","操作"].map(h => (
+                {["时间","用户","用户ID","设备SN","参数模板","医生","云端同步","结果","操作"].map(h => (
                   <th key={h} className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1]">{h}</th>
                 ))}
               </tr>
