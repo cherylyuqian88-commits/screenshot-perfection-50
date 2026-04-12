@@ -9,6 +9,8 @@ import TuningPage from "./TuningPage";
 import RecordsPage from "./RecordsPage";
 import InstitutionPage from "./InstitutionPage";
 import AccountPage from "./AccountPage";
+import PatientEditPage from "./PatientEditPage";
+import PatientRecordsPage from "./PatientRecordsPage";
 
 const pageMeta: Record<string, { title: string; desc: string }> = {
   patients: { title: "用户列表", desc: "搜索本机构用户或云端用户，查看关系状态并进入详情或调参流程" },
@@ -18,6 +20,8 @@ const pageMeta: Record<string, { title: string; desc: string }> = {
   records: { title: "调参记录", desc: "查看历史调参记录、同步结果、兼容拦截原因与追溯详情" },
   institution: { title: "机构变更记录", desc: "查看用户服务机构切换记录，并明确当前服务机构的计算口径" },
   account: { title: "我的账号", desc: "查看当前登录医生账号信息与密码修改入口" },
+  "patient-edit": { title: "编辑用户", desc: "编辑用户基础信息，修改后即时保存" },
+  "patient-records": { title: "用户调参记录", desc: "查看该用户的历史调参记录与同步状态" },
 };
 
 export default function Index() {
@@ -46,6 +50,8 @@ export default function Index() {
       case "records": return <RecordsPage onNavigate={nav} />;
       case "institution": return <InstitutionPage />;
       case "account": return <AccountPage onLogout={handleLogout} />;
+      case "patient-edit": return <PatientEditPage onNavigate={nav} />;
+      case "patient-records": return <PatientRecordsPage onNavigate={nav} />;
       default: return <PatientsPage onNavigate={nav} />;
     }
   };
