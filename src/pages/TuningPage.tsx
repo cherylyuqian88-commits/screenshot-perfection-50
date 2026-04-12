@@ -14,24 +14,19 @@ export default function TuningPage({ onNavigate }: Props) {
       <div className="h-[calc(100vh-120px)] grid grid-cols-[1fr_260px] gap-4 max-xl:grid-cols-1 max-xl:h-auto">
         {/* Stage */}
         <div className="bg-gradient-to-b from-sidebar to-[hsl(216,36%,12%)] rounded-[20px] border border-sidebar-border relative overflow-hidden shadow-lg flex flex-col">
-          <div className="px-4 py-3.5 border-b border-white/[0.08] flex justify-between items-center text-primary-foreground">
-            <div>
-              <div className="text-lg font-extrabold">调参工作区</div>
-              <div className="text-xs text-sidebar-muted mt-1">
-                {!connected && "请先连接设备，完成兼容校验后进入调参"}
-              </div>
-            </div>
-            <div className="flex gap-2 items-center">
-              {connected ? (
-                <>
-                  <span className="text-xs text-sidebar-foreground/60 mr-1">RX-A102 / 9A24 / V0.5.1</span>
-                  <span className="text-xs text-sidebar-foreground/60">USB · 电量 82%</span>
-                  <Tag variant="info">已连接</Tag>
-                </>
-              ) : (
+          <div className="px-4 py-3.5 border-b border-white/[0.08] flex items-center gap-3 text-primary-foreground">
+            <div className="text-lg font-extrabold">调参工作区</div>
+            {connected ? (
+              <>
+                <span className="text-xs text-sidebar-foreground/60">RX-A102 / 9A24 / V0.5.1</span>
+                <span className="text-xs text-sidebar-foreground/60">USB · 电量 82%</span>
+              </>
+            ) : (
+              <>
+                <span className="text-xs text-sidebar-muted">请先连接设备，完成兼容校验后进入调参</span>
                 <Tag variant="warn">未连接设备</Tag>
-              )}
-            </div>
+              </>
+            )}
           </div>
 
           {connected ? (
