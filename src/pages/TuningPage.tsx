@@ -16,7 +16,7 @@ export default function TuningPage({ onNavigate }: Props) {
         <div className="bg-gradient-to-b from-sidebar to-[hsl(216,36%,12%)] rounded-[20px] border border-sidebar-border relative overflow-hidden shadow-lg flex flex-col">
           <div className="px-4 py-3.5 border-b border-white/[0.08] flex justify-between items-center text-primary-foreground">
             <div>
-              <div className="text-lg font-extrabold">SN-XXXXXXXXXX</div>
+              <div className="text-lg font-extrabold">{connected ? "SN-XXXXXXXXXX" : "设备编码"}</div>
               {!connected && <div className="text-xs text-sidebar-muted mt-1">请先连接设备，完成兼容校验后进入调参</div>}
             </div>
             <div className="flex gap-2 items-center">
