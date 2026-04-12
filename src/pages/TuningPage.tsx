@@ -126,14 +126,14 @@ export default function TuningPage({ onNavigate }: Props) {
       <Dialog open={showCompat} onOpenChange={setShowCompat}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">兼容校验 <Tag variant="warn">高风险拦截</Tag></DialogTitle>
+            <DialogTitle>兼容校验</DialogTitle>
             <DialogDescription>连接前需确认各版本兼容</DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-1 mt-2">
             <KV label="PC 客户端版本" value="V0.2.0" />
             <KV label="控制盒固件版本" value="V0.5.1" />
             <KV label="参数模板版本" value="PT-2026-04" />
-            <KV label="兼容结果" value={<Tag>通过</Tag>} />
+            <KV label="兼容结果" value={<span className="flex items-center gap-1.5"><Tag>通过</Tag>/<Tag variant="warn">高风险拦截</Tag></span>} />
           </div>
           <div className="flex justify-end mt-4">
             <Btn variant="primary" onClick={() => { setShowCompat(false); setConnected(true); toast("设备连接成功，已进入调参工作区"); }}>
