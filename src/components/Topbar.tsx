@@ -23,7 +23,7 @@ export default function Topbar({ title, desc }: Props) {
           </div>
           <div>
             <div className="text-[13px] font-bold">陈医生</div>
-            <div className="text-xs text-soft">执业医生</div>
+            <div className="text-xs text-soft">医生/管理员</div>
           </div>
         </div>
       </div>
