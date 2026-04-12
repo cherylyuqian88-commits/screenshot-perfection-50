@@ -90,17 +90,6 @@ export default function TuningPage({ onNavigate }: Props) {
 
         {/* Side panel */}
         <div className="flex flex-col gap-4 min-w-0 relative">
-          {/* 操作提醒 - 右上角 */}
-          <div className="text-[11px] text-soft leading-relaxed space-y-1">
-            <div className="flex items-start gap-1.5">
-              <span className="shrink-0 inline-block text-[10px] px-1.5 py-0 rounded-md bg-[hsl(45,93%,47%)]/15 text-[hsl(45,93%,47%)] font-semibold">提醒</span>
-              <span>用户不可在 App 端直接恢复参数，仅可看到存在可恢复配置的提示。</span>
-            </div>
-            <div className="flex items-start gap-1.5">
-              <span className="shrink-0 inline-block text-[10px] px-1.5 py-0 rounded-md bg-[hsl(45,93%,47%)]/15 text-[hsl(45,93%,47%)] font-semibold">提醒</span>
-              <span>保存前需检查版本兼容，PC 客户端、固件、参数模板任一不匹配均应拦截。</span>
-            </div>
-          </div>
 
         </div>
       </div>
