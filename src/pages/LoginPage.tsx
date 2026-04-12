@@ -20,7 +20,7 @@ export default function LoginPage({ onLogin }: Props) {
         </div>
 
         <h1 className="text-[42px] leading-[1.18] mt-[18px] mb-3 font-extrabold max-w-[720px]">
-          睿芯仿生眼适配软件<br />机构医生端页面原型
+          仿生眼适配软件
         </h1>
 
         <p className="text-base leading-[1.9] max-w-[720px] text-soft">
