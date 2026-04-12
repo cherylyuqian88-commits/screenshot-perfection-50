@@ -1,12 +1,21 @@
+import { useState } from "react";
 import { toast } from "sonner";
-import { Card, Tag, PanelTitle, TimelineItem, Btn, TableWrap } from "@/components/ui-parts";
+import { Card, Tag, PanelTitle, Btn, TableWrap } from "@/components/ui-parts";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface Props { onNavigate: (page: string) => void; }
 
+const dupUsers = [
+  { name: "李某", phone: "138****5678", gender: "男", age: 58, idLast4: "4821", uid: "SZ202604120001", org: "深圳爱眼低视力中心" },
+  { name: "李某", phone: "138****1234", gender: "男", age: 60, idLast4: "7733", uid: "HZ202603030014", org: "杭州康复门诊" },
+];
+
 export default function NewPatientPage({ onNavigate }: Props) {
+  const [open, setOpen] = useState(false);
+
   return (
     <div className="animate-fade-in">
-      <div className="grid grid-cols-2 gap-4 max-xl:grid-cols-1">
+      <div className="grid grid-cols-1 gap-4 max-w-2xl">
         <Card>
           <PanelTitle title="新建用户"><Tag variant="info">医生端建档</Tag></PanelTitle>
           <div className="grid grid-cols-2 gap-3">
@@ -31,55 +40,45 @@ export default function NewPatientPage({ onNavigate }: Props) {
             ))}
           </div>
           <div className="flex gap-2.5 flex-wrap mt-3">
-            <Btn onClick={() => toast("先执行云端查重，避免重复新建用户。")}>云端查重</Btn>
-            <Btn variant="primary" onClick={() => toast("演示：系统自动生成用户ID = 机构 + 时间戳 + 流水号。")}>确认建档并生成用户ID</Btn>
-          </div>
-        </Card>
-
-        <Card>
-          <PanelTitle title="建档规则提示"><Tag variant="warn">关键约束</Tag></PanelTitle>
-          <div className="flex flex-col gap-3">
-            <TimelineItem title="用户ID生成规则" desc="由系统根据机构编码 + 时间戳 + 流水号自动生成，不允许医生手动输入。" />
-            <TimelineItem title="手机号重复处理" desc="若手机号已存在，需验证码确认，并优先拉取云端已有用户档案，不重复建新账号。" />
-            <TimelineItem title="手机号变更" desc="后续若用户需变更手机号，由医生在 PC 端发起处理，更新当前登录方式。" />
+            <Btn variant="primary" onClick={() => setOpen(true)}>确认建档并生成用户ID</Btn>
           </div>
         </Card>
       </div>
 
-      <Card className="mt-4">
-        <PanelTitle title="查重结果示例">
-          <Btn onClick={() => toast('演示：已存在用户时，医生应选择"拉取并建立服务关系"，而不是重复创建。')}>查看处理建议</Btn>
-        </PanelTitle>
-        <TableWrap>
-          <table className="w-full border-collapse">
-            <thead>
-              <tr>
-                {["姓名","手机号","用户ID","当前服务机构","可见范围","建议动作"].map(h => (
-                  <th key={h} className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px]">{h}</th>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>查重用户</DialogTitle>
+          </DialogHeader>
+          <TableWrap>
+            <table className="w-full border-collapse">
+              <thead>
+                <tr>
+                  {["姓名","手机号","性别","年龄","身份证后4位","用户ID","当前关联机构","操作"].map(h => (
+                    <th key={h} className="px-4 py-3 border-b border-line bg-secondary text-soft text-left text-[13px] whitespace-nowrap">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {dupUsers.map((u, i) => (
+                  <tr key={i}>
+                    <td className="px-4 py-3 border-b border-line text-[13px]">{u.name}</td>
+                    <td className="px-4 py-3 border-b border-line text-[13px]">{u.phone}</td>
+                    <td className="px-4 py-3 border-b border-line text-[13px]">{u.gender}</td>
+                    <td className="px-4 py-3 border-b border-line text-[13px]">{u.age}</td>
+                    <td className="px-4 py-3 border-b border-line text-[13px]">{u.idLast4}</td>
+                    <td className="px-4 py-3 border-b border-line text-[13px]">{u.uid}</td>
+                    <td className="px-4 py-3 border-b border-line text-[13px]">{u.org}</td>
+                    <td className="px-4 py-3 border-b border-line text-[13px]">
+                      <Btn variant="primary" onClick={() => { toast("已建立关联"); setOpen(false); }}>建立关联</Btn>
+                    </td>
+                  </tr>
                 ))}
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">李某</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">138****1234</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">SZ202604120001</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">深圳爱眼低视力中心</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">完整信息可见</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]"><Btn variant="ok" onClick={() => onNavigate("patients")}>直接进入详情</Btn></td>
-              </tr>
-              <tr>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">王某</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">137****9981</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">HZ202603030014</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">杭州康复门诊</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">仅脱敏字段</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]"><Btn variant="primary" onClick={() => toast("演示：验证码确认后，可建立本机构服务关系并留痕。")}>建立本机构关系</Btn></td>
-              </tr>
-            </tbody>
-          </table>
-        </TableWrap>
-      </Card>
+              </tbody>
+            </table>
+          </TableWrap>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
