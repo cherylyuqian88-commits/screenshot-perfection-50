@@ -87,7 +87,7 @@ export default function TuningPage({ onNavigate }: Props) {
             <PanelTitle title="关联用户">
               <Btn 
                 className="text-accent-foreground opacity-65 bg-[#eff4fa] border border-solid border-[#39404c]/[0.59]"
-                onClick={() => toast("演示：替换当前关联用户")}
+                onClick={() => onNavigate("select-user")}
               >
                 替换用户
               </Btn>

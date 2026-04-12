@@ -10,6 +10,7 @@ import RecordsPage from "./RecordsPage";
 import AccountPage from "./AccountPage";
 import PatientEditPage from "./PatientEditPage";
 import PatientRecordsPage from "./PatientRecordsPage";
+import SelectUserPage from "./SelectUserPage";
 
 const pageMeta: Record<string, { title: string; desc: string }> = {
   patients: { title: "用户列表", desc: "搜索本机构用户或云端用户，查看关系状态并进入详情或调参流程" },
@@ -19,6 +20,7 @@ const pageMeta: Record<string, { title: string; desc: string }> = {
   
   account: { title: "我的账号", desc: "查看当前登录医生账号信息与密码修改入口" },
   "patient-records": { title: "用户调参记录", desc: "查看该用户的历史调参记录与同步状态" },
+  "select-user": { title: "选择关联用户", desc: "从用户列表中选择或取消关联用户" },
 };
 
 export default function Index() {
@@ -47,6 +49,7 @@ export default function Index() {
       
       case "account": return <AccountPage onLogout={handleLogout} />;
       case "patient-records": return <PatientRecordsPage onNavigate={nav} />;
+      case "select-user": return <SelectUserPage onNavigate={nav} />;
       default: return <PatientsPage onNavigate={nav} />;
     }
   };
