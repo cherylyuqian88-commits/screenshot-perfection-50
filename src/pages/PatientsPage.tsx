@@ -25,17 +25,15 @@ export default function PatientsPage({ onNavigate }: Props) {
 
   return (
     <div className="animate-fade-in h-full flex flex-col">
-      {/* Top bar: search */}
-      <div className="flex items-center justify-end gap-2.5 mb-4">
-        <input className="border border-line rounded-[14px] bg-card px-3.5 py-3 text-foreground outline-none max-w-[260px] text-sm focus:border-brand focus:shadow-[0_0_0_4px_hsl(197_92%_60%/0.12)]" placeholder="搜索姓名 / 手机号 / 用户ID" defaultValue="李" />
-        <Btn variant="primary" onClick={() => toast("演示搜索：若手机号重复，将优先提示复用云端用户档案。")}>查询</Btn>
-      </div>
-
       <div className="grid grid-cols-[1fr_380px] gap-4 flex-1 min-h-0 max-xl:grid-cols-1">
         {/* Left: user list */}
         <Card className="flex flex-col min-h-0">
           <PanelTitle title="用户列表">
-            <Btn variant="primary" onClick={() => onNavigate("new-patient")}>新建用户</Btn>
+            <div className="flex items-center gap-2.5">
+              <input className="border border-line rounded-[14px] bg-card px-3.5 py-2.5 text-foreground outline-none max-w-[220px] text-sm focus:border-brand focus:shadow-[0_0_0_4px_hsl(197_92%_60%/0.12)]" placeholder="搜索姓名 / 手机号 / 用户ID" defaultValue="李" />
+              <Btn variant="primary" onClick={() => toast("演示搜索：若手机号重复，将优先提示复用云端用户档案。")}>查询</Btn>
+              <Btn variant="primary" onClick={() => onNavigate("new-patient")}>新建用户</Btn>
+            </div>
           </PanelTitle>
 
           {/* Tabs */}
