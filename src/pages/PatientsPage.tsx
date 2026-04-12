@@ -104,10 +104,7 @@ export default function PatientsPage({ onNavigate }: Props) {
             <>
               <Card>
                 <PanelTitle title="用户详情">
-                  <div className="flex gap-2">
-                    <Btn onClick={() => onNavigate("patient-records")}>调参记录</Btn>
-                    <Btn variant="primary" onClick={() => onNavigate("patient-edit")}>编辑</Btn>
-                  </div>
+                  <Btn onClick={() => onNavigate("patient-records")}>调参记录</Btn>
                 </PanelTitle>
                 <KV label="姓名" value={detail.name} />
                 <KV label="用户ID" value={detail.id} />
