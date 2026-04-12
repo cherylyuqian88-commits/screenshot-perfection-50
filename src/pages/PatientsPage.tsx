@@ -119,7 +119,7 @@ export default function PatientsPage({ onNavigate }: Props) {
                 <PanelTitle title="最近事件"><Tag variant="info">用户侧仅看摘要</Tag></PanelTitle>
                 <div className="flex flex-col gap-3">
                   <TimelineItem title="最近一次调参完成" desc="2026-04-12 10:12 · 陈医生 · 参数模板 PT-2026-04" />
-                  <TimelineItem title="当前服务机构来源" desc="按用户最后一次确认切换绑定机构结果计算，不按临时连接动态切换。" />
+                  
                 </div>
               </Card>
             </>
