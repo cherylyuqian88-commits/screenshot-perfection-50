@@ -96,7 +96,10 @@ export default function Index() {
   const renderPage = () => {
     const nav = setActivePage;
     switch (activePage) {
-      case "patients": return <PatientsPage onNavigate={(p: string) => navigateTo(p)} />;
+      case "patients": return <PatientsPage onNavigate={(p: string) => {
+        if (p === "patient-records") navigateTo(p, "patient-detail");
+        else nav(p);
+      }} />;
       case "new-patient": return <NewPatientPage onNavigate={nav} />;
       case "tuning": return <TuningPage onNavigate={(p: string) => {
         if (p === "patient-records") navigateTo(p, "tuning");
