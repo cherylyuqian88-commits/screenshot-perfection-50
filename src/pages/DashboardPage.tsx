@@ -1,6 +1,4 @@
-import { useState } from "react";
 import { Card, Tag, PanelTitle, MetricContent, TimelineItem, Btn, TableWrap } from "@/components/ui-parts";
-import { Checkbox } from "@/components/ui/checkbox";
 
 interface Props { onNavigate: (page: string) => void; }
 
@@ -10,25 +8,13 @@ const dashRecords = [
 ];
 
 export default function DashboardPage({ onNavigate }: Props) {
-  const [checkedIds, setCheckedIds] = useState<string[]>([]);
-
-  const allChecked = dashRecords.length > 0 && checkedIds.length === dashRecords.length;
-  const someChecked = checkedIds.length > 0 && !allChecked;
-
-  const toggleAll = () => {
-    setCheckedIds(allChecked ? [] : dashRecords.map(r => r.id));
-  };
-  const toggleOne = (id: string) => {
-    setCheckedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
-  };
-
   return (
     <div className="animate-fade-in">
       <div className="grid grid-cols-4 gap-4 max-xl:grid-cols-2">
         <Card dark><MetricContent label="本机构患者总数" value={286} desc="已建档并留存记录的患者总量" /></Card>
         <Card><MetricContent label="今日待调参" value={8} desc="已预约且需现场连接设备处理" /></Card>
         <Card><MetricContent label="云端待确认患者" value={3} desc="存在跨机构历史，需确认是否建立本机构服务关系" /></Card>
-        <Card><MetricContent label="版本风险提醒" value={2} desc="设备固件与参数模板存在兼容拦截" /></Card>
+        <Card><MetricContent label="版本风险提醒" value={2} desc="设备固件与参数编号存在兼容拦截" /></Card>
       </div>
 
       <div className="grid grid-cols-2 gap-4 mt-4 max-xl:grid-cols-1">
@@ -45,7 +31,7 @@ export default function DashboardPage({ onNavigate }: Props) {
           <PanelTitle title="待处理提醒"><Tag variant="warn">3 项</Tag></PanelTitle>
           <div className="flex flex-col gap-3">
             <TimelineItem title="发现患者手机号重复" desc="建议先从云端拉取已有患者档案后再确认建立本机构服务关系" />
-            <TimelineItem title="控制盒 RX-A102 固件版本偏低" desc="当前参数模板 PT-2026-04 不兼容，禁止继续保存新调参数据" />
+            <TimelineItem title="控制盒 RX-A102 固件版本偏低" desc="当前参数编号 PT-2026-04 不兼容，禁止继续保存新调参数据" />
             <TimelineItem title="患者李某待确认机构切换" desc="需患者确认后，当前服务机构才会切换为本机构" />
           </div>
         </Card>
@@ -57,9 +43,6 @@ export default function DashboardPage({ onNavigate }: Props) {
           <table className="w-full border-collapse min-w-[980px]">
             <thead>
               <tr>
-                <th className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1] w-10">
-                  <Checkbox checked={allChecked} onCheckedChange={toggleAll} aria-label="全选" className={someChecked ? "data-[state=unchecked]:bg-brand/20" : ""} />
-                </th>
                 {["时间","患者","设备SN","调参医生","兼容性","结果","操作"].map(h => (
                   <th key={h} className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1]">{h}</th>
                 ))}
@@ -68,9 +51,6 @@ export default function DashboardPage({ onNavigate }: Props) {
             <tbody>
               {dashRecords.map(r => (
                 <tr key={r.id} className="hover:bg-secondary/60 transition-colors">
-                  <td className="px-4 py-3.5 border-b border-line text-[13px]">
-                    <Checkbox checked={checkedIds.includes(r.id)} onCheckedChange={() => toggleOne(r.id)} />
-                  </td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{r.time}</td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{r.patient}</td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{r.sn}</td>

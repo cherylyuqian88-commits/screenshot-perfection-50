@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Card, PanelTitle, Tag, Btn, TableWrap } from "@/components/ui-parts";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,7 +23,6 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
   const [resetOpen, setResetOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState<typeof mockDoctors[0] | null>(null);
-  const [checkedIds, setCheckedIds] = useState<string[]>([]);
 
   const [newName, setNewName] = useState("");
   const [newAccount, setNewAccount] = useState("");
@@ -36,21 +34,6 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
   const filtered = doctors.filter(d =>
     d.name.includes(search) || d.account.includes(search) || d.phone.includes(search)
   );
-
-  const allChecked = filtered.length > 0 && filtered.every(d => checkedIds.includes(d.id));
-  const someChecked = filtered.some(d => checkedIds.includes(d.id)) && !allChecked;
-
-  const toggleAll = () => {
-    const ids = filtered.map(d => d.id);
-    if (allChecked) {
-      setCheckedIds(prev => prev.filter(id => !ids.includes(id)));
-    } else {
-      setCheckedIds(prev => [...new Set([...prev, ...ids])]);
-    }
-  };
-  const toggleOne = (id: string) => {
-    setCheckedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
-  };
 
   const handleAdd = () => {
     if (!newName || !newAccount) { toast.error("请填写必填项"); return; }
@@ -110,19 +93,10 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
           </div>
         </PanelTitle>
 
-        {checkedIds.length > 0 && (
-          <div className="px-4 py-2 text-[13px] text-soft flex items-center gap-2">
-            已选 {checkedIds.length} 项
-          </div>
-        )}
-
         <TableWrap>
           <table className="w-full border-collapse min-w-[900px]">
             <thead>
               <tr>
-                <th className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1] w-10">
-                  <Checkbox checked={allChecked} onCheckedChange={toggleAll} aria-label="全选" className={someChecked ? "data-[state=unchecked]:bg-brand/20" : ""} />
-                </th>
                 {["登录账号", "姓名", "手机号", "所属机构", "角色", "状态", "创建时间", "操作"].map(h => (
                   <th key={h} className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1]">{h}</th>
                 ))}
@@ -131,9 +105,6 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
             <tbody>
               {filtered.map(d => (
                 <tr key={d.id} className="hover:bg-secondary/60 transition-colors">
-                  <td className="px-4 py-3.5 border-b border-line text-[13px]">
-                    <Checkbox checked={checkedIds.includes(d.id)} onCheckedChange={() => toggleOne(d.id)} />
-                  </td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{d.account}</td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{d.name}</td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{d.phone}</td>
@@ -145,25 +116,10 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{d.createTime}</td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">
                     <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={() => { setSelectedDoctor(d); setEditName(d.name); setEditPhone(d.phone); setEditOpen(true); }}
-                        className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors cursor-pointer bg-transparent border-0"
-                      >编辑</button>
-                      <button
-                        onClick={() => { setSelectedDoctor(d); setResetOpen(true); }}
-                        className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors cursor-pointer bg-transparent border-0"
-                      >重置密码</button>
-                      <button
-                        onClick={() => handleToggleStatus(d)}
-                        className={cn(
-                          "text-xs underline underline-offset-2 transition-colors cursor-pointer bg-transparent border-0",
-                          d.status === "启用" ? "text-[hsl(28,80%,36%)] hover:text-[hsl(28,80%,26%)]" : "text-[hsl(162,73%,27%)] hover:text-[hsl(162,73%,20%)]"
-                        )}
-                      >{d.status === "启用" ? "停用" : "启用"}</button>
-                      <button
-                        onClick={() => { setSelectedDoctor(d); setDeleteOpen(true); }}
-                        className="text-xs text-destructive hover:text-destructive/80 underline underline-offset-2 transition-colors cursor-pointer bg-transparent border-0"
-                      >删除</button>
+                      <button onClick={() => { setSelectedDoctor(d); setEditName(d.name); setEditPhone(d.phone); setEditOpen(true); }} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors cursor-pointer bg-transparent border-0">编辑</button>
+                      <button onClick={() => { setSelectedDoctor(d); setResetOpen(true); }} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors cursor-pointer bg-transparent border-0">重置密码</button>
+                      <button onClick={() => handleToggleStatus(d)} className={cn("text-xs underline underline-offset-2 transition-colors cursor-pointer bg-transparent border-0", d.status === "启用" ? "text-[hsl(28,80%,36%)] hover:text-[hsl(28,80%,26%)]" : "text-[hsl(162,73%,27%)] hover:text-[hsl(162,73%,20%)]")}>{d.status === "启用" ? "停用" : "启用"}</button>
+                      <button onClick={() => { setSelectedDoctor(d); setDeleteOpen(true); }} className="text-xs text-destructive hover:text-destructive/80 underline underline-offset-2 transition-colors cursor-pointer bg-transparent border-0">删除</button>
                     </div>
                   </td>
                 </tr>
