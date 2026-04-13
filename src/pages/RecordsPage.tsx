@@ -3,7 +3,6 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, Tag, PanelTitle, Btn, TableWrap } from "@/components/ui-parts";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -33,24 +32,8 @@ export default function RecordsPage({ onNavigate }: Props) {
   const [page, setPage] = useState(1);
   const [startDate, setStartDate] = useState<Date | undefined>(new Date("2026-04-01"));
   const [endDate, setEndDate] = useState<Date | undefined>(new Date("2026-04-12"));
-  const [checkedIds, setCheckedIds] = useState<string[]>([]);
   const totalPages = Math.ceil(records.length / PAGE_SIZE);
   const paged = records.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-
-  const allChecked = paged.length > 0 && paged.every(r => checkedIds.includes(r.id));
-  const someChecked = paged.some(r => checkedIds.includes(r.id)) && !allChecked;
-
-  const toggleAll = () => {
-    const pageIds = paged.map(r => r.id);
-    if (allChecked) {
-      setCheckedIds(prev => prev.filter(id => !pageIds.includes(id)));
-    } else {
-      setCheckedIds(prev => [...new Set([...prev, ...pageIds])]);
-    }
-  };
-  const toggleOne = (id: string) => {
-    setCheckedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
-  };
 
   return (
     <div className="animate-fade-in">
@@ -80,25 +63,16 @@ export default function RecordsPage({ onNavigate }: Props) {
                 <Calendar mode="single" selected={endDate} onSelect={setEndDate} initialFocus className={cn("p-3 pointer-events-auto")} />
               </PopoverContent>
             </Popover>
-            <input className="border border-line rounded-[14px] bg-card px-3.5 py-2 text-foreground outline-none w-[280px] text-sm" placeholder="搜索用户姓名/用户ID/电话号码/操作医生" />
+            <input className="border border-line rounded-[14px] bg-card px-3.5 py-2 text-foreground outline-none w-[280px] text-sm" placeholder="搜索用户姓名/电话号码/操作医生" />
             <Btn>搜索</Btn>
           </div>
         </PanelTitle>
-
-        {checkedIds.length > 0 && (
-          <div className="px-4 py-2 text-[13px] text-soft flex items-center gap-2">
-            已选 {checkedIds.length} 项
-          </div>
-        )}
 
         <TableWrap>
           <table className="w-full border-collapse min-w-[980px]">
             <thead>
               <tr>
-                <th className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1] w-10">
-                  <Checkbox checked={allChecked} onCheckedChange={toggleAll} aria-label="全选" className={someChecked ? "data-[state=unchecked]:bg-brand/20" : ""} />
-                </th>
-                {["调试时间","设备SN","关联用户","参数模板","操作医生","结果"].map(h => (
+                {["调试时间","设备SN","关联用户","参数编号","操作医生","结果"].map(h => (
                   <th key={h} className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1]">{h}</th>
                 ))}
               </tr>
@@ -106,9 +80,6 @@ export default function RecordsPage({ onNavigate }: Props) {
             <tbody>
               {paged.map((r) => (
                 <tr key={r.id} className="hover:bg-secondary/60 transition-colors">
-                  <td className="px-4 py-3.5 border-b border-line text-[13px]">
-                    <Checkbox checked={checkedIds.includes(r.id)} onCheckedChange={() => toggleOne(r.id)} />
-                  </td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{r.time}</td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{r.sn}</td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px] text-muted-foreground">{r.user || "—"}</td>

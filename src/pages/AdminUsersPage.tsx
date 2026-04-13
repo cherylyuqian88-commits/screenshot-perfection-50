@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Card, Tag, PanelTitle, Btn, TableWrap } from "@/components/ui-parts";
-import { Checkbox } from "@/components/ui/checkbox";
 
 interface Props { onNavigate: (page: string) => void; }
 
@@ -15,26 +14,10 @@ const users = [
 
 export default function AdminUsersPage({ onNavigate }: Props) {
   const [search, setSearch] = useState("");
-  const [checkedIds, setCheckedIds] = useState<string[]>([]);
 
   const filtered = users.filter(u =>
-    u.name.includes(search) || u.id.includes(search) || u.phone.includes(search)
+    u.name.includes(search) || u.phone.includes(search)
   );
-
-  const allChecked = filtered.length > 0 && filtered.every(u => checkedIds.includes(u.id));
-  const someChecked = filtered.some(u => checkedIds.includes(u.id)) && !allChecked;
-
-  const toggleAll = () => {
-    const ids = filtered.map(u => u.id);
-    if (allChecked) {
-      setCheckedIds(prev => prev.filter(id => !ids.includes(id)));
-    } else {
-      setCheckedIds(prev => [...new Set([...prev, ...ids])]);
-    }
-  };
-  const toggleOne = (id: string) => {
-    setCheckedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
-  };
 
   return (
     <div className="animate-fade-in">
@@ -43,7 +26,7 @@ export default function AdminUsersPage({ onNavigate }: Props) {
           <div className="flex items-center gap-2">
             <input
               className="border border-line rounded-[14px] bg-card px-3.5 py-2 text-foreground outline-none w-[220px] text-sm focus:border-brand focus:shadow-[0_0_0_4px_hsl(197_92%_60%/0.12)]"
-              placeholder="搜索用户ID/姓名/手机号"
+              placeholder="搜索姓名/手机号"
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
@@ -51,19 +34,10 @@ export default function AdminUsersPage({ onNavigate }: Props) {
           </div>
         </PanelTitle>
 
-        {checkedIds.length > 0 && (
-          <div className="px-4 py-2 text-[13px] text-soft flex items-center gap-2">
-            已选 {checkedIds.length} 项
-          </div>
-        )}
-
         <TableWrap>
           <table className="w-full border-collapse min-w-[980px]">
             <thead>
               <tr>
-                <th className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1] w-10">
-                  <Checkbox checked={allChecked} onCheckedChange={toggleAll} aria-label="全选" className={someChecked ? "data-[state=unchecked]:bg-brand/20" : ""} />
-                </th>
                 {["姓名", "手机号", "性别/年龄", "关联机构", "关联设备", "活跃度", "近7天日均时长", "医生", "最近调参时间"].map(h => (
                   <th key={h} className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1]">{h}</th>
                 ))}
@@ -72,9 +46,6 @@ export default function AdminUsersPage({ onNavigate }: Props) {
             <tbody>
               {filtered.map(u => (
                 <tr key={u.id} className="hover:bg-secondary/60 transition-colors">
-                  <td className="px-4 py-3.5 border-b border-line text-[13px]">
-                    <Checkbox checked={checkedIds.includes(u.id)} onCheckedChange={() => toggleOne(u.id)} />
-                  </td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.name}</td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.phone}</td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.gender}</td>

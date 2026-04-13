@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Card, Tag, PanelTitle, KV, TimelineItem, Btn, TableWrap } from "@/components/ui-parts";
-import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 
-interface Props { onNavigate: (page: string) => void; }
+interface Props { onNavigate: (page: string, from?: string) => void; }
 
 const localUsers = [
   { name: "李某", id: "SZ202604120001", phone: "138****1234", gender: "男 / 58", idLast4: "4821", org: "深圳爱眼低视力中心", device: "SN-20260301-0042", status: "本机构服务中", activity: "高", avgDuration: "4.2h", doctor: "陈医生", lastTuning: "2026-04-12 10:12" },
@@ -22,20 +21,9 @@ const crossUsers = [
 export default function PatientsPage({ onNavigate }: Props) {
   const [tab, setTab] = useState<"local" | "cross">("local");
   const [selectedUser, setSelectedUser] = useState<string | null>("SZ202604120001");
-  const [checkedIds, setCheckedIds] = useState<string[]>([]);
 
   const users = tab === "local" ? localUsers : crossUsers;
   const detail = [...localUsers, ...crossUsers].find((u) => u.id === selectedUser);
-
-  const allChecked = users.length > 0 && checkedIds.length === users.length;
-  const someChecked = checkedIds.length > 0 && checkedIds.length < users.length;
-
-  const toggleAll = () => {
-    setCheckedIds(allChecked ? [] : users.map(u => u.id));
-  };
-  const toggleOne = (id: string) => {
-    setCheckedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
-  };
 
   return (
     <div className="animate-fade-in h-full flex flex-col">
@@ -44,26 +32,16 @@ export default function PatientsPage({ onNavigate }: Props) {
         <Card className="flex flex-col min-h-0">
           <PanelTitle title="用户列表">
             <div className="flex items-center gap-2.5">
-              <input className="border border-line rounded-[14px] bg-card px-3.5 py-2.5 text-foreground outline-none max-w-[220px] text-sm focus:border-brand focus:shadow-[0_0_0_4px_hsl(197_92%_60%/0.12)]" placeholder="搜索用户ID/姓名/手机号" />
+              <input className="border border-line rounded-[14px] bg-card px-3.5 py-2.5 text-foreground outline-none max-w-[220px] text-sm focus:border-brand focus:shadow-[0_0_0_4px_hsl(197_92%_60%/0.12)]" placeholder="搜索姓名/手机号" />
               <Btn variant="primary" onClick={() => toast("演示搜索：若手机号重复，将优先提示复用云端用户档案。")}>查询</Btn>
               <Btn variant="primary" onClick={() => onNavigate("new-patient")}>新建用户</Btn>
             </div>
           </PanelTitle>
 
-          {checkedIds.length > 0 && (
-            <div className="px-4 py-2 text-[13px] text-soft flex items-center gap-2">
-              已选 {checkedIds.length} 项
-              <button onClick={() => toast("演示：批量操作")} className="text-xs text-brand hover:underline">批量操作</button>
-            </div>
-          )}
-
           <TableWrap>
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  <th className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1] w-10">
-                    <Checkbox checked={allChecked} onCheckedChange={toggleAll} aria-label="全选" className={someChecked ? "data-[state=unchecked]:bg-brand/20" : ""} />
-                  </th>
                   {["姓名","关联机构","关联设备","活跃度","近7天日均时长","医生","最近调参时间"].map(h => (
                     <th key={h} className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1]">{h}</th>
                   ))}
@@ -79,9 +57,6 @@ export default function PatientsPage({ onNavigate }: Props) {
                       selectedUser === u.id ? "bg-brand/[0.06]" : "hover:bg-secondary/60"
                     )}
                   >
-                    <td className="px-4 py-3.5 border-b border-line text-[13px]" onClick={e => e.stopPropagation()}>
-                      <Checkbox checked={checkedIds.includes(u.id)} onCheckedChange={() => toggleOne(u.id)} />
-                    </td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.name}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.org}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.device}</td>
@@ -123,21 +98,20 @@ export default function PatientsPage({ onNavigate }: Props) {
             <>
               <Card>
                 <PanelTitle title="用户详情">
-                  <Btn onClick={() => onNavigate("patient-records")}>调参记录</Btn>
+                  <Btn onClick={() => onNavigate("patient-records", "patient-detail")}>调参记录</Btn>
                 </PanelTitle>
                 <KV label="姓名" value={detail.name} />
-                <KV label="用户ID" value={detail.id} />
                 <KV label="手机号" value={detail.phone} />
                 <KV label="性别 / 年龄" value={detail.gender} />
                 <KV label="身份证后4位" value={detail.idLast4} />
-                <KV label="关联机构" value={<span className="flex items-center justify-between w-full whitespace-nowrap">{detail.org}<button onClick={() => toast("演示：查看机构变更记录")} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors ml-auto">变更记录</button></span>} />
-                <KV label="关联设备" value={<span className="flex items-center justify-between w-full whitespace-nowrap">{detail.device}<button onClick={() => onNavigate("device-link")} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors ml-auto">变更记录</button></span>} />
+                <KV label="关联机构" value={<span className="flex items-center justify-between w-full whitespace-nowrap">{detail.org}<button onClick={() => onNavigate("org-change-records")} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors ml-auto">变更记录</button></span>} />
+                <KV label="关联设备" value={<span className="flex items-center justify-between w-full whitespace-nowrap">{detail.device}<button onClick={() => onNavigate("device-change-records")} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors ml-auto">变更记录</button></span>} />
               </Card>
 
               <Card>
                 <PanelTitle title="最近事件" />
                 <div className="flex flex-col gap-3">
-                  <TimelineItem title="最近一次调参完成" desc="2026-04-12 10:12 · 陈医生 · 参数模板 PT-2026-04" />
+                  <TimelineItem title="最近一次调参完成" desc="2026-04-12 10:12 · 陈医生 · 参数编号 PT-2026-04" />
                 </div>
               </Card>
             </>

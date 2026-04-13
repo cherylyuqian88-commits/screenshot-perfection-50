@@ -8,9 +8,10 @@ import NewPatientPage from "./NewPatientPage";
 import TuningPage from "./TuningPage";
 import RecordsPage from "./RecordsPage";
 import AccountPage from "./AccountPage";
-import PatientEditPage from "./PatientEditPage";
 import PatientRecordsPage from "./PatientRecordsPage";
 import SelectUserPage from "./SelectUserPage";
+import OrgChangeRecordsPage from "./OrgChangeRecordsPage";
+import DeviceChangeRecordsPage from "./DeviceChangeRecordsPage";
 import AdminDoctorsPage from "./AdminDoctorsPage";
 import AdminUsersPage from "./AdminUsersPage";
 import AdminRecordsPage from "./AdminRecordsPage";
@@ -18,12 +19,14 @@ import AdminAccountPage from "./AdminAccountPage";
 
 const doctorPageMeta: Record<string, { title: string; desc: string }> = {
   patients: { title: "用户列表", desc: "搜索本机构用户或云端用户，查看关系状态并进入详情或调参流程" },
-  "new-patient": { title: "新建用户", desc: "医生录入用户基础信息，执行云端查重后生成用户ID并建档" },
+  "new-patient": { title: "新建用户", desc: "医生录入用户基础信息，执行云端查重后建档" },
   tuning: { title: "调参工作区", desc: "连接设备并进行参数调节，右侧展示关联用户信息与设备状态" },
-  records: { title: "调参记录", desc: "查看历史调参记录、同步结果、兼容拦截原因与追溯详情" },
+  records: { title: "调参记录", desc: "查看历史调参记录、兼容拦截原因与追溯详情" },
   account: { title: "我的账号", desc: "查看当前登录医生账号信息与密码修改入口" },
-  "patient-records": { title: "用户调参记录", desc: "查看该用户的历史调参记录与同步状态" },
+  "patient-records": { title: "用户调参记录", desc: "查看该用户的历史调参记录" },
   "select-user": { title: "选择关联用户", desc: "从用户列表中选择或取消关联用户" },
+  "org-change-records": { title: "关联机构变更记录", desc: "查看该用户的关联机构变更历史" },
+  "device-change-records": { title: "关联设备变更记录", desc: "查看该用户的关联设备变更历史" },
 };
 
 const adminPageMeta: Record<string, { title: string; desc: string }> = {
@@ -39,8 +42,8 @@ export default function Index() {
   const [activePage, setActivePage] = useState("patients");
   const [navFrom, setNavFrom] = useState<"patient-detail" | "tuning" | undefined>(undefined);
 
-  const navigateTo = (page: string, from?: "patient-detail" | "tuning") => {
-    setNavFrom(from);
+  const navigateTo = (page: string, from?: string) => {
+    setNavFrom(from as "patient-detail" | "tuning" | undefined);
     setActivePage(page);
   };
 
@@ -94,22 +97,23 @@ export default function Index() {
   const meta = doctorPageMeta[activePage] || doctorPageMeta.patients;
 
   const renderPage = () => {
-    const nav = setActivePage;
     switch (activePage) {
-      case "patients": return <PatientsPage onNavigate={(p: string) => {
-        if (p === "patient-records") navigateTo(p, "patient-detail");
-        else nav(p);
+      case "patients": return <PatientsPage onNavigate={(p: string, from?: string) => {
+        if (p === "patient-records") navigateTo(p, from || "patient-detail");
+        else navigateTo(p, from);
       }} />;
-      case "new-patient": return <NewPatientPage onNavigate={nav} />;
+      case "new-patient": return <NewPatientPage onNavigate={setActivePage} />;
       case "tuning": return <TuningPage onNavigate={(p: string) => {
         if (p === "patient-records") navigateTo(p, "tuning");
-        else nav(p);
+        else setActivePage(p);
       }} />;
-      case "records": return <RecordsPage onNavigate={nav} />;
+      case "records": return <RecordsPage onNavigate={setActivePage} />;
       case "account": return <AccountPage onLogout={handleLogout} />;
-      case "patient-records": return <PatientRecordsPage onNavigate={nav} from={navFrom || "tuning"} />;
-      case "select-user": return <SelectUserPage onNavigate={nav} />;
-      default: return <PatientsPage onNavigate={nav} />;
+      case "patient-records": return <PatientRecordsPage onNavigate={setActivePage} from={navFrom || "tuning"} />;
+      case "select-user": return <SelectUserPage onNavigate={setActivePage} />;
+      case "org-change-records": return <OrgChangeRecordsPage onNavigate={setActivePage} />;
+      case "device-change-records": return <DeviceChangeRecordsPage onNavigate={setActivePage} />;
+      default: return <PatientsPage onNavigate={setActivePage} />;
     }
   };
 
