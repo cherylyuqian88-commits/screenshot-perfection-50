@@ -42,7 +42,7 @@ export default function PatientsPage({ onNavigate }: Props) {
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  {["姓名","关联机构","关联设备","活跃度","近7天日均时长","医生","最近调参时间"].map(h => (
+                  {["姓名","关联机构","活跃度","近7天日均时长","医生","最近调参时间","操作"].map(h => (
                     <th key={h} className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1]">{h}</th>
                   ))}
                 </tr>
@@ -59,13 +59,15 @@ export default function PatientsPage({ onNavigate }: Props) {
                   >
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.name}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.org}</td>
-                    <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.device}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">
                       <Tag variant={u.activity === "高" ? "ok" : u.activity === "中" ? "info" : "danger"}>{u.activity}</Tag>
                     </td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.avgDuration}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.doctor}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.lastTuning}</td>
+                    <td className="px-4 py-3.5 border-b border-line text-[13px]">
+                      <Btn variant="primary" onClick={(e) => { e.stopPropagation(); toast(`演示：为 ${u.name} 发起调参配对`); }}>调参配对</Btn>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -106,6 +108,23 @@ export default function PatientsPage({ onNavigate }: Props) {
                 <KV label="身份证后4位" value={detail.idLast4} />
                 <KV label="关联机构" value={<span className="flex items-center justify-between w-full whitespace-nowrap">{detail.org}<button onClick={() => onNavigate("org-change-records")} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors ml-auto">变更记录</button></span>} />
                 <KV label="关联设备" value={<span className="flex items-center justify-between w-full whitespace-nowrap">{detail.device}<button onClick={() => onNavigate("device-change-records")} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors ml-auto">变更记录</button></span>} />
+              </Card>
+
+              <Card>
+                <PanelTitle title="使用数据" />
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { label: "近7天", value: "42 小时" },
+                    { label: "近30天", value: "156 小时" },
+                    { label: "累计使用", value: "328 小时" },
+                    { label: "日均使用", value: "6.2 小时" },
+                  ].map((item) => (
+                    <div key={item.label} className="bg-secondary/60 rounded-xl px-3.5 py-3 text-center">
+                      <div className="text-[11px] text-muted-foreground mb-1">{item.label}</div>
+                      <div className="text-base font-bold text-foreground">{item.value}</div>
+                    </div>
+                  ))}
+                </div>
               </Card>
 
               <Card>
