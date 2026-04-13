@@ -37,6 +37,12 @@ export default function Index() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState<"doctor" | "admin">("doctor");
   const [activePage, setActivePage] = useState("patients");
+  const [navFrom, setNavFrom] = useState<"patient-detail" | "tuning" | undefined>(undefined);
+
+  const navigateTo = (page: string, from?: "patient-detail" | "tuning") => {
+    setNavFrom(from);
+    setActivePage(page);
+  };
 
   if (!loggedIn) {
     return (
@@ -90,12 +96,18 @@ export default function Index() {
   const renderPage = () => {
     const nav = setActivePage;
     switch (activePage) {
-      case "patients": return <PatientsPage onNavigate={nav} />;
+      case "patients": return <PatientsPage onNavigate={(p: string) => {
+        if (p === "patient-records") navigateTo(p, "patient-detail");
+        else nav(p);
+      }} />;
       case "new-patient": return <NewPatientPage onNavigate={nav} />;
-      case "tuning": return <TuningPage onNavigate={nav} />;
+      case "tuning": return <TuningPage onNavigate={(p: string) => {
+        if (p === "patient-records") navigateTo(p, "tuning");
+        else nav(p);
+      }} />;
       case "records": return <RecordsPage onNavigate={nav} />;
       case "account": return <AccountPage onLogout={handleLogout} />;
-      case "patient-records": return <PatientRecordsPage onNavigate={nav} />;
+      case "patient-records": return <PatientRecordsPage onNavigate={nav} from={navFrom || "tuning"} />;
       case "select-user": return <SelectUserPage onNavigate={nav} />;
       default: return <PatientsPage onNavigate={nav} />;
     }
