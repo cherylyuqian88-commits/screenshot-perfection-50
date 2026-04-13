@@ -1,8 +1,27 @@
+import { useState } from "react";
 import { Card, Tag, PanelTitle, MetricContent, TimelineItem, Btn, TableWrap } from "@/components/ui-parts";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface Props { onNavigate: (page: string) => void; }
 
+const dashRecords = [
+  { id: "d1", time: "2026-04-12 10:12", patient: "李某", sn: "RX-A102 / 9A24", doctor: "陈医生", compat: "匹配", result: "已保存" },
+  { id: "d2", time: "2026-04-12 09:43", patient: "张某", sn: "RX-A087 / 71F2", doctor: "陈医生", compat: "需升级", result: "被拦截" },
+];
+
 export default function DashboardPage({ onNavigate }: Props) {
+  const [checkedIds, setCheckedIds] = useState<string[]>([]);
+
+  const allChecked = dashRecords.length > 0 && checkedIds.length === dashRecords.length;
+  const someChecked = checkedIds.length > 0 && !allChecked;
+
+  const toggleAll = () => {
+    setCheckedIds(allChecked ? [] : dashRecords.map(r => r.id));
+  };
+  const toggleOne = (id: string) => {
+    setCheckedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  };
+
   return (
     <div className="animate-fade-in">
       <div className="grid grid-cols-4 gap-4 max-xl:grid-cols-2">
@@ -38,32 +57,29 @@ export default function DashboardPage({ onNavigate }: Props) {
           <table className="w-full border-collapse min-w-[980px]">
             <thead>
               <tr>
-                {["时间","患者","用户ID","设备SN","调参医生","兼容性","结果","操作"].map(h => (
+                <th className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1] w-10">
+                  <Checkbox checked={allChecked} onCheckedChange={toggleAll} aria-label="全选" className={someChecked ? "data-[state=unchecked]:bg-brand/20" : ""} />
+                </th>
+                {["时间","患者","设备SN","调参医生","兼容性","结果","操作"].map(h => (
                   <th key={h} className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1]">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">2026-04-12 10:12</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">李某</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">SZ202604120001</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">RX-A102 / 9A24</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">陈医生</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]"><Tag>匹配</Tag></td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]"><Tag>已保存</Tag></td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]"><Btn onClick={() => onNavigate("patient-detail")}>查看患者</Btn></td>
-              </tr>
-              <tr>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">2026-04-12 09:43</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">张某</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">SZ202603180021</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">RX-A087 / 71F2</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]">陈医生</td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]"><Tag variant="warn">需升级</Tag></td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]"><Tag variant="danger">被拦截</Tag></td>
-                <td className="px-4 py-3.5 border-b border-line text-[13px]"><Btn onClick={() => onNavigate("tuning")}>查看调参页</Btn></td>
-              </tr>
+              {dashRecords.map(r => (
+                <tr key={r.id} className="hover:bg-secondary/60 transition-colors">
+                  <td className="px-4 py-3.5 border-b border-line text-[13px]">
+                    <Checkbox checked={checkedIds.includes(r.id)} onCheckedChange={() => toggleOne(r.id)} />
+                  </td>
+                  <td className="px-4 py-3.5 border-b border-line text-[13px]">{r.time}</td>
+                  <td className="px-4 py-3.5 border-b border-line text-[13px]">{r.patient}</td>
+                  <td className="px-4 py-3.5 border-b border-line text-[13px]">{r.sn}</td>
+                  <td className="px-4 py-3.5 border-b border-line text-[13px]">{r.doctor}</td>
+                  <td className="px-4 py-3.5 border-b border-line text-[13px]"><Tag>{r.compat === "匹配" ? "匹配" : ""}</Tag>{r.compat === "需升级" && <Tag variant="warn">需升级</Tag>}</td>
+                  <td className="px-4 py-3.5 border-b border-line text-[13px]"><Tag variant={r.result === "已保存" ? undefined : "danger"}>{r.result}</Tag></td>
+                  <td className="px-4 py-3.5 border-b border-line text-[13px]"><Btn onClick={() => onNavigate(r.result === "已保存" ? "patient-detail" : "tuning")}>{r.result === "已保存" ? "查看患者" : "查看调参页"}</Btn></td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </TableWrap>
