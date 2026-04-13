@@ -37,6 +37,12 @@ export default function Index() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState<"doctor" | "admin">("doctor");
   const [activePage, setActivePage] = useState("patients");
+  const [navFrom, setNavFrom] = useState<"patient-detail" | "tuning" | undefined>(undefined);
+
+  const navigateTo = (page: string, from?: "patient-detail" | "tuning") => {
+    setNavFrom(from);
+    setActivePage(page);
+  };
 
   if (!loggedIn) {
     return (
