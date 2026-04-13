@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Card, Tag, PanelTitle, KV, TimelineItem, Btn } from "@/components/ui-parts";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 interface Props { onNavigate: (page: string) => void; }
 
 export default function TuningPage({ onNavigate }: Props) {
   const [connected, setConnected] = useState(false);
-  const [showCompat, setShowCompat] = useState(false);
 
   return (
     <div className="animate-fade-in">
@@ -17,7 +15,7 @@ export default function TuningPage({ onNavigate }: Props) {
           <div className="px-4 py-3.5 border-b border-white/[0.08] flex justify-between items-center text-primary-foreground">
             <div>
               <div className="text-lg font-extrabold">{connected ? "SN-XXXXXXXXXX" : "设备编码"}</div>
-              {!connected && <div className="text-xs text-sidebar-muted mt-1">请先连接设备，完成兼容校验后进入调参</div>}
+              {!connected && <div className="text-xs text-sidebar-muted mt-1">请先连接设备后进入调参</div>}
             </div>
             <div className="flex gap-2 items-center">
               {connected ? (
@@ -65,14 +63,13 @@ export default function TuningPage({ onNavigate }: Props) {
               </div>
             </>
           ) : (
-            /* 未连接设备状态 */
             <div className="flex-1 grid place-items-center text-primary-foreground text-center p-8 relative">
               <div>
                 <div className="flex flex-col gap-3 items-center mb-6">
                   <TimelineItem dark title="连接状态" desc="等待 USB 连接…" />
                 </div>
                 <div className="flex gap-2.5 justify-center flex-wrap">
-                  <Btn variant="primary" onClick={() => setShowCompat(true)}>连接设备</Btn>
+                  <Btn variant="primary" onClick={() => { setConnected(true); toast("设备连接成功，已进入调参工作区"); }}>连接设备</Btn>
                   <Btn onClick={() => toast("演示：若设备连接失败，提示检查数据线 / 开机状态。")}>连接异常处理</Btn>
                 </div>
               </div>
@@ -123,27 +120,6 @@ export default function TuningPage({ onNavigate }: Props) {
           <Btn onClick={() => toast("演示：已删除关联用户")} className="w-full text-center justify-center text-destructive border-destructive/30 hover:bg-destructive/10">删除关联用户</Btn>
         </div>
       </div>
-
-      {/* 兼容校验弹窗 */}
-      <Dialog open={showCompat} onOpenChange={setShowCompat}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>兼容校验</DialogTitle>
-            <DialogDescription>连接前需确认各版本兼容</DialogDescription>
-          </DialogHeader>
-          <div className="flex flex-col gap-1 mt-2">
-            <KV label="PC 客户端版本" value="V0.2.0" />
-            <KV label="控制盒固件版本" value="V0.5.1" />
-            <KV label="设备编码" value="SN-XXX" />
-            <KV label="兼容结果" value={<span className="flex items-center gap-1.5"><Tag>通过</Tag>/<Tag variant="warn">高风险拦截</Tag></span>} />
-          </div>
-          <div className="flex justify-end mt-4">
-            <Btn variant="primary" onClick={() => { setShowCompat(false); setConnected(true); toast("设备连接成功，已进入调参工作区"); }}>
-              确认连接设备
-            </Btn>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
