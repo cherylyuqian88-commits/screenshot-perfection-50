@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Card, Tag, PanelTitle, KV, TimelineItem, Btn, TableWrap } from "@/components/ui-parts";
+import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 
 interface Props { onNavigate: (page: string) => void; }
-
-type Tab = "local" | "cross";
 
 const localUsers = [
   { name: "李某", id: "SZ202604120001", phone: "138****1234", gender: "男 / 58", idLast4: "4821", org: "深圳爱眼低视力中心", device: "SN-20260301-0042", status: "本机构服务中", activity: "高", avgDuration: "4.2h", doctor: "陈医生", lastTuning: "2026-04-12 10:12" },
@@ -21,11 +20,22 @@ const crossUsers = [
 ];
 
 export default function PatientsPage({ onNavigate }: Props) {
-  const [tab, setTab] = useState<Tab>("local");
+  const [tab, setTab] = useState<"local" | "cross">("local");
   const [selectedUser, setSelectedUser] = useState<string | null>("SZ202604120001");
+  const [checkedIds, setCheckedIds] = useState<string[]>([]);
 
   const users = tab === "local" ? localUsers : crossUsers;
   const detail = [...localUsers, ...crossUsers].find((u) => u.id === selectedUser);
+
+  const allChecked = users.length > 0 && checkedIds.length === users.length;
+  const someChecked = checkedIds.length > 0 && checkedIds.length < users.length;
+
+  const toggleAll = () => {
+    setCheckedIds(allChecked ? [] : users.map(u => u.id));
+  };
+  const toggleOne = (id: string) => {
+    setCheckedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  };
 
   return (
     <div className="animate-fade-in h-full flex flex-col">
@@ -40,13 +50,21 @@ export default function PatientsPage({ onNavigate }: Props) {
             </div>
           </PanelTitle>
 
+          {checkedIds.length > 0 && (
+            <div className="px-4 py-2 text-[13px] text-soft flex items-center gap-2">
+              已选 {checkedIds.length} 项
+              <button onClick={() => toast("演示：批量操作")} className="text-xs text-brand hover:underline">批量操作</button>
+            </div>
+          )}
 
-          {/* Table */}
           <TableWrap>
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  {["用户ID","姓名","关联机构","关联设备","活跃度","近7天日均时长","医生","最近调参时间"].map(h => (
+                  <th className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1] w-10">
+                    <Checkbox checked={allChecked} onCheckedChange={toggleAll} aria-label="全选" className={someChecked ? "data-[state=unchecked]:bg-brand/20" : ""} />
+                  </th>
+                  {["姓名","关联机构","关联设备","活跃度","近7天日均时长","医生","最近调参时间"].map(h => (
                     <th key={h} className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1]">{h}</th>
                   ))}
                 </tr>
@@ -61,23 +79,24 @@ export default function PatientsPage({ onNavigate }: Props) {
                       selectedUser === u.id ? "bg-brand/[0.06]" : "hover:bg-secondary/60"
                     )}
                   >
-                    <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.id}</td>
+                    <td className="px-4 py-3.5 border-b border-line text-[13px]" onClick={e => e.stopPropagation()}>
+                      <Checkbox checked={checkedIds.includes(u.id)} onCheckedChange={() => toggleOne(u.id)} />
+                    </td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.name}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.org}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.device}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">
                       <Tag variant={u.activity === "高" ? "ok" : u.activity === "中" ? "info" : "danger"}>{u.activity}</Tag>
                     </td>
-                    <td className="px-4 py-3.5 border-b border-line text-[13px]">{(u as any).avgDuration}</td>
-                    <td className="px-4 py-3.5 border-b border-line text-[13px]">{(u as any).doctor}</td>
-                    <td className="px-4 py-3.5 border-b border-line text-[13px]">{(u as any).lastTuning}</td>
+                    <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.avgDuration}</td>
+                    <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.doctor}</td>
+                    <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.lastTuning}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </TableWrap>
 
-          {/* Pagination */}
           <div className="flex items-center justify-end gap-1.5 mt-3 text-sm">
             <button className="px-3 py-1.5 rounded-lg border border-line bg-card text-soft cursor-pointer hover:text-foreground transition-colors text-[13px]">上一页</button>
             {[1, 2, 3].map((p) => (
@@ -119,7 +138,6 @@ export default function PatientsPage({ onNavigate }: Props) {
                 <PanelTitle title="最近事件" />
                 <div className="flex flex-col gap-3">
                   <TimelineItem title="最近一次调参完成" desc="2026-04-12 10:12 · 陈医生 · 参数模板 PT-2026-04" />
-                  
                 </div>
               </Card>
             </>
