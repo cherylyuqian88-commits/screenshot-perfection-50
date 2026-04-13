@@ -66,7 +66,7 @@ export default function PatientsPage({ onNavigate }: Props) {
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.doctor}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.lastTuning}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">
-                      <Btn variant="primary" onClick={(e) => { e.stopPropagation(); toast(`演示：为 ${u.name} 发起调参配对`); }}>调参配对</Btn>
+                      <span onClick={(e) => e.stopPropagation()}><Btn variant="primary" onClick={() => toast(`演示：为 ${u.name} 发起调参配对`)}>调参配对</Btn></span>
                     </td>
                   </tr>
                 ))}
