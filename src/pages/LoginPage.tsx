@@ -42,19 +42,15 @@ export default function LoginPage({ onLogin }: Props) {
         </p>
 
         <div className="grid grid-cols-3 gap-3 mt-7 max-w-[780px]">
-          {role === "doctor" ? (
-            [
+          {(role === "doctor" ? [
               { title: "用户建档", desc: "支持录入基础信息、云端查重、手机号验证码确认与本机构关联。" },
               { title: "设备调参", desc: "设备连接后在调参界面可视化同步调节，并展示关联用户信息。" },
               { title: "记录追溯", desc: "保留调参记录、机构变更记录和操作日志，便于后续审查与追溯。" },
-            ]
-          ) : (
-            [
+            ] : [
               { title: "医生管理", desc: "新增、编辑、停用或删除医生账号，一键重置登录密码。" },
               { title: "用户数据", desc: "查看全机构用户列表、活跃度、关联设备与调参情况。" },
               { title: "调参记录", desc: "查看全机构调参记录，支持按时间、医生、用户筛选。" },
-            ]
-          ).map((f) => (
+            ]).map((f) => (
             <div key={f.title} className="rounded-lg bg-card/70 backdrop-blur-sm border border-white/90 p-4 shadow-[0_18px_40px_hsl(222_47%_11%/0.06)]">
               <strong className="text-sm">{f.title}</strong>
               <div className="text-soft text-xs mt-2 leading-[1.8]">{f.desc}</div>
