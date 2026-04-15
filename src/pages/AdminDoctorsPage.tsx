@@ -199,7 +199,10 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
             <div className="border-2 border-dashed border-line rounded-xl p-6 text-center">
               <input ref={fileRef} type="file" accept=".xlsx,.xls,.csv" className="hidden" onChange={handleImportFile} />
               <p className="text-sm text-muted-foreground mb-3">点击下方按钮选择文件</p>
-              <Btn variant="primary" onClick={() => fileRef.current?.click()}>选择文件</Btn>
+              <div className="flex items-center gap-2 justify-center">
+                <Btn variant="primary" onClick={() => fileRef.current?.click()}>选择文件</Btn>
+                <Btn onClick={() => { const a = document.createElement("a"); a.href = "/doctor_import_template.xlsx"; a.download = "医生账号导入模板.xlsx"; a.click(); }}>下载表格模版</Btn>
+              </div>
             </div>
             <p className="text-xs text-soft">导入的医生账号初始密码统一为 123456，首次登录需修改密码。</p>
           </div>
