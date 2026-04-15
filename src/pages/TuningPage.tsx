@@ -2,9 +2,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Card, Tag, PanelTitle, KV, TimelineItem, Btn } from "@/components/ui-parts";
 
-interface Props { onNavigate: (page: string) => void; }
+interface Props { onNavigate: (page: string) => void; tuningUser?: { name: string; gender: string; note?: string } | null; }
 
-export default function TuningPage({ onNavigate }: Props) {
+export default function TuningPage({ onNavigate, tuningUser }: Props) {
   const [connected, setConnected] = useState(false);
 
   return (
@@ -89,9 +89,9 @@ export default function TuningPage({ onNavigate }: Props) {
                 替换用户
               </Btn>
             </PanelTitle>
-            <KV label="姓名" value="李某" />
-            <KV label="年龄" value="62岁" />
-            <KV label="备注" value="黄斑变性患者" />
+            <KV label="姓名" value={tuningUser?.name || "李某"} />
+            <KV label="性别 / 年龄" value={tuningUser?.gender || "男 / 62"} />
+            <KV label="备注" value={tuningUser?.note || "黄斑变性患者"} />
           </Card>
 
           <Card>

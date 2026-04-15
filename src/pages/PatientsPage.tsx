@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { Card, Tag, PanelTitle, KV, TimelineItem, Btn, TableWrap } from "@/components/ui-parts";
 import { cn } from "@/lib/utils";
 
-interface Props { onNavigate: (page: string, from?: string) => void; }
+interface Props { onNavigate: (page: string, from?: string) => void; onTuningPair?: (user: { name: string; gender: string; note?: string }) => void; }
 
 const localUsers = [
   { name: "李某", id: "SZ202604120001", phone: "138****1234", gender: "男 / 58", idLast4: "4821", org: "深圳爱眼低视力中心", device: "SN-20260301-0042", status: "本机构服务中", activity: "高", avgDuration: "4.2h", doctor: "陈医生", lastTuning: "2026-04-12 10:12" },
@@ -19,7 +19,7 @@ const crossUsers = [
   { name: "王某", id: "HZ202603030014", phone: "137****9981", gender: "女 / 49", idLast4: "—", org: "杭州康复门诊", device: "未显示", status: "待建立关系", isCross: true, activity: "低", avgDuration: "0.5h", doctor: "—", lastTuning: "—" },
 ];
 
-export default function PatientsPage({ onNavigate }: Props) {
+export default function PatientsPage({ onNavigate, onTuningPair }: Props) {
   const [tab, setTab] = useState<"local" | "cross">("local");
   const [selectedUser, setSelectedUser] = useState<string | null>("SZ202604120001");
   const [doctorFilter, setDoctorFilter] = useState<string>("all");
@@ -81,7 +81,7 @@ export default function PatientsPage({ onNavigate }: Props) {
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.doctor}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.lastTuning}</td>
                     <td className="px-4 py-3.5 border-b border-line text-[13px]">
-                      <span onClick={(e) => e.stopPropagation()}><Btn variant="primary" onClick={() => toast(`演示：为 ${u.name} 发起调参配对`)}>调参配对</Btn></span>
+                      <span onClick={(e) => e.stopPropagation()}><Btn variant="primary" onClick={() => { onTuningPair?.({ name: u.name, gender: u.gender }); }}>调参配对</Btn></span>
                     </td>
                   </tr>
                 ))}

@@ -41,6 +41,7 @@ export default function Index() {
   const [userRole, setUserRole] = useState<"doctor" | "admin">("doctor");
   const [activePage, setActivePage] = useState("patients");
   const [navFrom, setNavFrom] = useState<"patient-detail" | "tuning" | undefined>(undefined);
+  const [tuningUser, setTuningUser] = useState<{ name: string; gender: string; note?: string } | null>(null);
 
   const navigateTo = (page: string, from?: string) => {
     setNavFrom(from as "patient-detail" | "tuning" | undefined);
@@ -101,9 +102,9 @@ export default function Index() {
       case "patients": return <PatientsPage onNavigate={(p: string, from?: string) => {
         if (p === "patient-records") navigateTo(p, from || "patient-detail");
         else navigateTo(p, from);
-      }} />;
+      }} onTuningPair={(user) => { setTuningUser(user); setActivePage("tuning"); }} />;
       case "new-patient": return <NewPatientPage onNavigate={setActivePage} />;
-      case "tuning": return <TuningPage onNavigate={(p: string) => {
+      case "tuning": return <TuningPage tuningUser={tuningUser} onNavigate={(p: string) => {
         if (p === "patient-records") navigateTo(p, "tuning");
         else setActivePage(p);
       }} />;
