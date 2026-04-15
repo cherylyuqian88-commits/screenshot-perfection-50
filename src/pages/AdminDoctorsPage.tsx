@@ -59,7 +59,7 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
   const checkAndShowDups = (incoming: PendingDoctor[]) => {
     const checked = incoming.map(p => {
       const dup = doctors.find(d => d.account === p.account);
-      return dup ? { ...p, isDup: true, dupWith: dup.name } : { ...p, isDup: false };
+      return dup ? { ...p, isDup: true, dupWith: dup.name, origDupAccount: dup.account, origDupName: dup.name } : { ...p, isDup: false };
     });
     const okCount = checked.filter(p => !p.isDup).length;
     setPendingDoctors(checked);
