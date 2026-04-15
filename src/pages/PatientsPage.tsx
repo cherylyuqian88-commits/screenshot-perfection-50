@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Card, Tag, PanelTitle, KV, TimelineItem, Btn, TableWrap } from "@/components/ui-parts";
 import { cn } from "@/lib/utils";
@@ -21,8 +22,10 @@ const crossUsers = [
 export default function PatientsPage({ onNavigate }: Props) {
   const [tab, setTab] = useState<"local" | "cross">("local");
   const [selectedUser, setSelectedUser] = useState<string | null>("SZ202604120001");
+  const [doctorFilter, setDoctorFilter] = useState<string>("all");
 
-  const users = tab === "local" ? localUsers : crossUsers;
+  const allUsers = tab === "local" ? localUsers : crossUsers;
+  const users = doctorFilter === "all" ? allUsers : allUsers.filter(u => u.doctor === doctorFilter);
   const detail = [...localUsers, ...crossUsers].find((u) => u.id === selectedUser);
 
   return (
@@ -32,6 +35,18 @@ export default function PatientsPage({ onNavigate }: Props) {
         <Card className="flex flex-col min-h-0">
           <PanelTitle title="用户列表">
             <div className="flex items-center gap-2.5">
+              <Select value={doctorFilter} onValueChange={setDoctorFilter}>
+                <SelectTrigger className="w-[130px] rounded-[14px] text-sm h-[38px]">
+                  <SelectValue placeholder="筛选医生" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">全部医生</SelectItem>
+                  <SelectItem value="陈医生">陈医生</SelectItem>
+                  <SelectItem value="王医生">王医生</SelectItem>
+                  <SelectItem value="刘医生">刘医生</SelectItem>
+                  <SelectItem value="李医生">李医生</SelectItem>
+                </SelectContent>
+              </Select>
               <input className="border border-line rounded-[14px] bg-card px-3.5 py-2.5 text-foreground outline-none max-w-[220px] text-sm focus:border-brand focus:shadow-[0_0_0_4px_hsl(197_92%_60%/0.12)]" placeholder="搜索姓名/手机号" />
               <Btn variant="primary" onClick={() => toast("演示搜索：若手机号重复，将优先提示复用云端用户档案。")}>查询</Btn>
               <Btn variant="primary" onClick={() => onNavigate("new-patient")}>新建用户</Btn>
