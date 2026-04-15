@@ -72,7 +72,10 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
 
   const handleResetPwd = () => {
     if (!selectedDoctor) return;
-    toast.success(`已重置 ${selectedDoctor.name} 的密码为 123456，请及时通知该医生修改密码`);
+    setDoctors(prev => prev.map(d =>
+      d.id === selectedDoctor.id ? { ...d, status: "启用" } : d
+    ));
+    toast.success(`已重置 ${selectedDoctor.name} 的密码为 123456，账号已自动启用，请及时通知该医生修改密码`);
     setResetOpen(false);
   };
 
@@ -84,13 +87,6 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
     setDeleteOpen(false);
   };
 
-  const handleToggleStatus = (doctor: Doctor) => {
-    const newStatus = doctor.status === "启用" ? "停用" : "启用";
-    setDoctors(prev => prev.map(d =>
-      d.id === doctor.id ? { ...d, status: newStatus } : d
-    ));
-    toast.success(`${doctor.name} 已${newStatus}`);
-  };
 
   const handleImportFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -168,7 +164,7 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
                     <div className="flex items-center gap-1.5">
                       <button onClick={() => { setSelectedDoctor(d); setEditName(d.name); setEditPhone(d.phone); setEditOpen(true); }} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors cursor-pointer bg-transparent border-0">编辑</button>
                       <button onClick={() => { setSelectedDoctor(d); setResetOpen(true); }} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors cursor-pointer bg-transparent border-0">重置密码</button>
-                      <button onClick={() => handleToggleStatus(d)} className={cn("text-xs underline underline-offset-2 transition-colors cursor-pointer bg-transparent border-0", d.status === "启用" ? "text-[hsl(28,80%,36%)] hover:text-[hsl(28,80%,26%)]" : "text-[hsl(162,73%,27%)] hover:text-[hsl(162,73%,20%)]")}>{d.status === "启用" ? "停用" : "启用"}</button>
+                      
                       <button onClick={() => { setSelectedDoctor(d); setDeleteOpen(true); }} className="text-xs text-destructive hover:text-destructive/80 underline underline-offset-2 transition-colors cursor-pointer bg-transparent border-0">删除</button>
                     </div>
                   </td>
