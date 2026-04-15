@@ -277,9 +277,10 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
         <DialogContent>
           <DialogHeader><DialogTitle>编辑医生信息</DialogTitle></DialogHeader>
           <div className="flex flex-col gap-4 py-2">
-            <div className="flex flex-col gap-1.5"><Label>登录账号</Label><Input disabled value={selectedDoctor?.account || ""} /></div>
+            <div className="flex flex-col gap-1.5"><Label>登录账号</Label><Input disabled value={selectedDoctor?.account || ""} className="bg-muted" /></div>
             <div className="flex flex-col gap-1.5"><Label>姓名</Label><Input value={editName} onChange={e => setEditName(e.target.value)} /></div>
             <div className="flex flex-col gap-1.5"><Label>手机号</Label><Input value={editPhone} onChange={e => setEditPhone(e.target.value)} /></div>
+            <div className="flex flex-col gap-1.5"><Label>所属机构</Label><Input disabled value={selectedDoctor?.org || ""} className="bg-muted" /></div>
           </div>
           <DialogFooter><Btn onClick={() => setEditOpen(false)}>取消</Btn><Btn variant="primary" onClick={handleEdit}>保存修改</Btn></DialogFooter>
         </DialogContent>
