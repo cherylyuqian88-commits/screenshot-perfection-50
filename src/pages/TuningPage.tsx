@@ -71,7 +71,7 @@ export default function TuningPage({ onNavigate, tuningUser }: Props) {
                   <TimelineItem dark title="连接状态" desc="等待 USB 连接…" />
                 </div>
                 <div className="flex gap-2.5 justify-center flex-wrap">
-                  <Btn variant="primary" onClick={() => { setConnected(true); toast("设备连接成功，已进入调参工作区"); }}>连接设备</Btn>
+                  <Btn variant="primary" onClick={() => setConflictOpen(true)}>连接设备</Btn>
                   <Btn onClick={() => toast("演示：若设备连接失败，提示检查数据线 / 开机状态。")}>连接异常处理</Btn>
                 </div>
               </div>
