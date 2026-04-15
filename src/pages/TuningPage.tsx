@@ -48,14 +48,6 @@ export default function TuningPage({ onNavigate, tuningUser }: Props) {
               </div>
 
               <div className="px-4 py-3.5 border-t border-white/[0.08] flex gap-2.5 flex-wrap">
-                {[
-                  { label: "预设模板 A" },
-                  { label: "预设模板 B" },
-                ].map((b) => (
-                  <button key={b.label} className="bg-white/[0.08] text-primary-foreground border border-white/10 px-3.5 py-2.5 rounded-xl font-bold cursor-pointer text-sm hover:bg-white/[0.12] transition-all">
-                    {b.label}
-                  </button>
-                ))}
                 <button
                   onClick={() => toast("演示：保存时会同时写入控制盒与云端记录。")}
                   className="bg-gradient-to-r from-[hsl(199,89%,49%)] to-[hsl(224,76%,48%)] text-primary-foreground border-0 px-3.5 py-2.5 rounded-xl font-bold cursor-pointer text-sm"
@@ -115,13 +107,13 @@ export default function TuningPage({ onNavigate, tuningUser }: Props) {
                         <span className="text-muted-foreground block mb-0.5">SN {r.sn}</span>
                         {r.date}
                       </div>
-                      <Btn onClick={() => toast(`演示：调取 ${r.date} 的调参记录`)}>调取</Btn>
+                      <Btn onClick={() => toast(`演示：调用 ${r.date} 的调参记录`)}>调用</Btn>
                     </div>
                   ))}
                 </div>
               </Card>
 
-              <Btn onClick={() => toast("演示：已删除关联用户")} className="w-full text-center justify-center text-destructive border-destructive/30 hover:bg-destructive/10">删除关联用户</Btn>
+              
             </>
           ) : (
             <Card className="flex-1 grid place-items-center">
