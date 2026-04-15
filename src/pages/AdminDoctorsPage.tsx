@@ -119,7 +119,7 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
     setRecycleSelected([]);
     setEmptyRecycleOpen(false);
     setRecycleOpen(false);
-    toast.success("回收站已清空，账号已彻底删除。关联用户中的医生姓名将标注"账号已注销"");
+    toast.success("回收站已清空，账号已彻底删除。关联用户中的医生姓名将标注（账号已注销）");
   };
 
   const recycleAllSelected = recycleBin.length > 0 && recycleSelected.length === recycleBin.length;
