@@ -115,10 +115,7 @@ export default function PatientsPage({ onNavigate }: Props) {
             <>
               <Card>
                 <PanelTitle title="用户详情">
-                  <div className="flex gap-2">
-                    <Btn onClick={() => onNavigate("patient-edit")}>修改</Btn>
-                    <Btn onClick={() => onNavigate("patient-records", "patient-detail")}>调参记录</Btn>
-                  </div>
+                  <Btn onClick={() => onNavigate("patient-edit")}>修改</Btn>
                 </PanelTitle>
                 <KV label="姓名" value={detail.name} />
                 <KV label="手机号" value={detail.phone} />
@@ -146,9 +143,9 @@ export default function PatientsPage({ onNavigate }: Props) {
               </Card>
 
               <Card>
-                <PanelTitle title="最近事件" />
+                <PanelTitle title="最近调参记录" />
                 <div className="flex flex-col gap-3">
-                  <TimelineItem title="最近一次调参完成" desc="2026-04-12 10:12 · 陈医生 · 参数编号 PT-2026-04" />
+                  <TimelineItem title="" desc="2026-04-12 10:12 · 陈医生 · 参数编号 PT-2026-04" />
                 </div>
               </Card>
             </>
