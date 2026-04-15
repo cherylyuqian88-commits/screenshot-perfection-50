@@ -38,6 +38,8 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
   const [newName, setNewName] = useState("");
   const [newAccount, setNewAccount] = useState("");
   const [newPhone, setNewPhone] = useState("");
+  const [dupOpen, setDupOpen] = useState(false);
+  const [dupDoctor, setDupDoctor] = useState<Doctor | null>(null);
 
   const [editName, setEditName] = useState("");
   const [editPhone, setEditPhone] = useState("");
@@ -50,14 +52,26 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
 
   const handleAdd = () => {
     if (!newName || !newAccount) { toast.error("请填写必填项"); return; }
-    toast.success(`已添加医生账号：${newAccount}`);
+    const dupMatch = doctors.find(d => d.account === newAccount);
+    if (dupMatch) {
+      setDupDoctor(dupMatch);
+      setDupOpen(true);
+      return;
+    }
+    confirmAdd();
+  };
+
+  const confirmAdd = () => {
     setDoctors(prev => [...prev, {
       id: `D${String(prev.length + 1).padStart(3, "0")}`,
       account: newAccount, name: newName, phone: newPhone,
       org: "深圳爱眼低视力中心", role: "医生", status: "启用",
       createTime: "2026-04-15"
     }]);
+    toast.success(`已添加医生账号：${newAccount}`);
     setAddOpen(false);
+    setDupOpen(false);
+    setDupDoctor(null);
     setNewName(""); setNewAccount(""); setNewPhone("");
   };
 
@@ -311,6 +325,25 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
           <p className="text-sm py-2">确定清空回收站？此操作不可撤销，所有已删除的医生账号将被彻底删除。</p>
           <p className="text-xs text-soft">彻底删除后，关联用户中的医生姓名不会被移除，仅在姓名后标注"（账号已注销）"。</p>
           <DialogFooter><Btn onClick={() => setEmptyRecycleOpen(false)}>取消</Btn><Btn variant="danger" onClick={handleEmptyRecycleBin}>确认清空</Btn></DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* 账号重复提示 */}
+      <Dialog open={dupOpen} onOpenChange={v => { setDupOpen(v); if (!v) setDupDoctor(null); }}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>账号重复提示</DialogTitle></DialogHeader>
+          <div className="py-2">
+            <p className="text-sm">本机构已存在相同登录账号：</p>
+            <div className="bg-secondary/80 rounded-xl px-4 py-3 mt-2 text-sm">
+              <p>账号：<strong>{dupDoctor?.account}</strong></p>
+              <p>姓名：<strong>{dupDoctor?.name}</strong></p>
+              <p>手机号：{dupDoctor?.phone}</p>
+            </div>
+            <p className="text-sm mt-3">请修改登录账号后重试。</p>
+          </div>
+          <DialogFooter>
+            <Btn onClick={() => setDupOpen(false)}>返回修改</Btn>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
