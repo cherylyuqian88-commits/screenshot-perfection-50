@@ -6,6 +6,7 @@ import { Card, Tag, PanelTitle, Btn, TableWrap } from "@/components/ui-parts";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Props { onNavigate: (page: string) => void; }
 
@@ -31,10 +32,16 @@ const PAGE_SIZE = 5;
 export default function AdminRecordsPage({ onNavigate }: Props) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [doctorFilter, setDoctorFilter] = useState<string>("all");
   const [startDate, setStartDate] = useState<Date | undefined>(new Date("2026-04-01"));
   const [endDate, setEndDate] = useState<Date | undefined>(new Date("2026-04-12"));
-  const totalPages = Math.ceil(records.length / PAGE_SIZE);
-  const paged = records.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const filteredRecords = records.filter(r => {
+    const matchSearch = !search || r.user.includes(search);
+    const matchDoctor = doctorFilter === "all" || r.doctor === doctorFilter;
+    return matchSearch && matchDoctor;
+  });
+  const totalPages = Math.ceil(filteredRecords.length / PAGE_SIZE);
+  const paged = filteredRecords.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   return (
     <div className="animate-fade-in">
@@ -64,9 +71,21 @@ export default function AdminRecordsPage({ onNavigate }: Props) {
                 <Calendar mode="single" selected={endDate} onSelect={setEndDate} initialFocus className="p-3 pointer-events-auto" />
               </PopoverContent>
             </Popover>
+            <Select value={doctorFilter} onValueChange={v => { setDoctorFilter(v); setPage(1); }}>
+              <SelectTrigger className="w-[130px] rounded-[14px] text-sm h-[38px]">
+                <SelectValue placeholder="筛选医生" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">全部医生</SelectItem>
+                <SelectItem value="陈医生">陈医生</SelectItem>
+                <SelectItem value="王医生">王医生</SelectItem>
+                <SelectItem value="刘医生">刘医生</SelectItem>
+                <SelectItem value="李医生">李医生</SelectItem>
+              </SelectContent>
+            </Select>
             <input
               className="border border-line rounded-[14px] bg-card px-3.5 py-2 text-foreground outline-none w-[280px] text-sm"
-              placeholder="搜索用户姓名/电话号码/操作医生"
+              placeholder="搜索用户姓名/电话号码"
               value={search}
               onChange={e => setSearch(e.target.value)}
             />

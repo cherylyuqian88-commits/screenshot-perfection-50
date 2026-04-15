@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Card, Tag, PanelTitle, Btn, TableWrap } from "@/components/ui-parts";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Props { onNavigate: (page: string) => void; }
 
@@ -14,24 +15,39 @@ const users = [
 
 export default function AdminUsersPage({ onNavigate }: Props) {
   const [search, setSearch] = useState("");
+  const [doctorFilter, setDoctorFilter] = useState<string>("all");
 
-  const filtered = users.filter(u =>
-    u.name.includes(search) || u.phone.includes(search)
-  );
+  const filtered = users.filter(u => {
+    const matchSearch = u.name.includes(search) || u.phone.includes(search);
+    const matchDoctor = doctorFilter === "all" || u.doctor === doctorFilter;
+    return matchSearch && matchDoctor;
+  });
 
   return (
     <div className="animate-fade-in">
       <Card>
         <PanelTitle title="用户数据查看">
           <div className="flex items-center gap-2">
-            <input
-              className="border border-line rounded-[14px] bg-card px-3.5 py-2 text-foreground outline-none w-[220px] text-sm focus:border-brand focus:shadow-[0_0_0_4px_hsl(197_92%_60%/0.12)]"
-              placeholder="搜索姓名/手机号"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-            />
-            <Btn>搜索</Btn>
-          </div>
+              <Select value={doctorFilter} onValueChange={setDoctorFilter}>
+                <SelectTrigger className="w-[130px] rounded-[14px] text-sm h-[38px]">
+                  <SelectValue placeholder="筛选医生" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">全部医生</SelectItem>
+                  <SelectItem value="陈医生">陈医生</SelectItem>
+                  <SelectItem value="王医生">王医生</SelectItem>
+                  <SelectItem value="刘医生">刘医生</SelectItem>
+                  <SelectItem value="李医生">李医生</SelectItem>
+                </SelectContent>
+              </Select>
+              <input
+                className="border border-line rounded-[14px] bg-card px-3.5 py-2 text-foreground outline-none w-[220px] text-sm focus:border-brand focus:shadow-[0_0_0_4px_hsl(197_92%_60%/0.12)]"
+                placeholder="搜索姓名/手机号"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+              />
+              <Btn>搜索</Btn>
+            </div>
         </PanelTitle>
 
         <TableWrap>
