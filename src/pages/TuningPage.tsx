@@ -46,15 +46,7 @@ export default function TuningPage({ onNavigate, tuningUser, onSetTuningUser }: 
                   </div>
                 </div>
               </div>
-
-              <div className="px-4 py-3.5 border-t border-white/[0.08] flex gap-2.5 flex-wrap">
-                <button
-                  onClick={() => toast("演示：保存时会同时写入控制盒与云端记录。")}
-                  className="bg-gradient-to-r from-[hsl(199,89%,49%)] to-[hsl(224,76%,48%)] text-primary-foreground border-0 px-3.5 py-2.5 rounded-xl font-bold cursor-pointer text-sm"
-                >
-                  保存当前参数
-                </button>
-              </div>
+            
             </>
           ) : (
             <div className="flex-1 grid place-items-center text-primary-foreground text-center p-8 relative">
@@ -113,7 +105,13 @@ export default function TuningPage({ onNavigate, tuningUser, onSetTuningUser }: 
                 </div>
               </Card>
 
-              
+
+              <button
+                onClick={() => toast("演示：保存时会同时写入控制盒与云端记录。")}
+                className="w-full bg-gradient-to-r from-[hsl(199,89%,49%)] to-[hsl(224,76%,48%)] text-primary-foreground border-0 px-3.5 py-2.5 rounded-xl font-bold cursor-pointer text-sm mt-2"
+              >
+                保存当前参数
+              </button>
             </>
           ) : (
             <Card className="flex-1 grid place-items-center">
