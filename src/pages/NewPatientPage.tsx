@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Card, Tag, PanelTitle, Btn, TableWrap } from "@/components/ui-parts";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
 interface Props { onNavigate: (page: string) => void; }
 
@@ -12,6 +13,26 @@ const dupUsers = [
 
 export default function NewPatientPage({ onNavigate }: Props) {
   const [open, setOpen] = useState(false);
+  const [otpOpen, setOtpOpen] = useState(false);
+  const [otpValue, setOtpValue] = useState("");
+  const [selectedUser, setSelectedUser] = useState<typeof dupUsers[0] | null>(null);
+
+  const handleLinkClick = (u: typeof dupUsers[0]) => {
+    setSelectedUser(u);
+    setOtpOpen(true);
+  };
+
+  const handleOtpConfirm = () => {
+    if (otpValue.length < 6) {
+      toast.error("请输入完整的6位验证码");
+      return;
+    }
+    toast.success("验证码校验成功，已建立关联");
+    setOtpOpen(false);
+    setOpen(false);
+    setOtpValue("");
+    onNavigate("tuning");
+  };
 
   return (
     <div className="animate-fade-in">
@@ -49,6 +70,7 @@ export default function NewPatientPage({ onNavigate }: Props) {
         </Card>
       </div>
 
+      {/* 查重弹窗 */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-4xl">
           <DialogHeader>
@@ -73,15 +95,38 @@ export default function NewPatientPage({ onNavigate }: Props) {
                     <td className="px-4 py-3 border-b border-line text-[13px]">{u.idLast4}</td>
                     <td className="px-4 py-3 border-b border-line text-[13px]">{u.org}</td>
                     <td className="px-4 py-3 border-b border-line text-[13px]">
-                      <Btn variant="primary" onClick={() => { toast("已建立关联"); setOpen(false); }}>建立关联</Btn>
+                      <Btn variant="primary" onClick={() => handleLinkClick(u)}>建立关联</Btn>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </TableWrap>
-          <div className="flex justify-center mt-4">
-            <Btn variant="primary" onClick={() => { setOpen(false); onNavigate("tuning"); }}>确定新建</Btn>
+        </DialogContent>
+      </Dialog>
+
+      {/* 验证码弹窗 */}
+      <Dialog open={otpOpen} onOpenChange={(v) => { setOtpOpen(v); if (!v) setOtpValue(""); }}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>验证码校验</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-soft">已向用户 {selectedUser?.name} 的手机号 {selectedUser?.phone} 发送验证码，请输入6位验证码完成关联。</p>
+          <div className="flex justify-center py-4">
+            <InputOTP maxLength={6} value={otpValue} onChange={setOtpValue}>
+              <InputOTPGroup>
+                <InputOTPSlot index={0} />
+                <InputOTPSlot index={1} />
+                <InputOTPSlot index={2} />
+                <InputOTPSlot index={3} />
+                <InputOTPSlot index={4} />
+                <InputOTPSlot index={5} />
+              </InputOTPGroup>
+            </InputOTP>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Btn onClick={() => { setOtpOpen(false); setOtpValue(""); }}>取消</Btn>
+            <Btn variant="primary" onClick={handleOtpConfirm}>确认</Btn>
           </div>
         </DialogContent>
       </Dialog>
