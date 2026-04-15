@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Card, Tag, PanelTitle, KV, TimelineItem, Btn } from "@/components/ui-parts";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface Props { onNavigate: (page: string) => void; tuningUser?: { name: string; gender: string; note?: string } | null; }
 
 export default function TuningPage({ onNavigate, tuningUser }: Props) {
   const [connected, setConnected] = useState(false);
+  const [conflictOpen, setConflictOpen] = useState(false);
 
   return (
     <div className="animate-fade-in">
@@ -69,7 +71,7 @@ export default function TuningPage({ onNavigate, tuningUser }: Props) {
                   <TimelineItem dark title="连接状态" desc="等待 USB 连接…" />
                 </div>
                 <div className="flex gap-2.5 justify-center flex-wrap">
-                  <Btn variant="primary" onClick={() => { setConnected(true); toast("设备连接成功，已进入调参工作区"); }}>连接设备</Btn>
+                  <Btn variant="primary" onClick={() => setConflictOpen(true)}>连接设备</Btn>
                   <Btn onClick={() => toast("演示：若设备连接失败，提示检查数据线 / 开机状态。")}>连接异常处理</Btn>
                 </div>
               </div>
@@ -131,6 +133,21 @@ export default function TuningPage({ onNavigate, tuningUser }: Props) {
           )}
         </div>
       </div>
+
+      <Dialog open={conflictOpen} onOpenChange={setConflictOpen}>
+        <DialogContent className="max-w-[420px]">
+          <DialogHeader>
+            <DialogTitle>关联用户冲突</DialogTitle>
+          </DialogHeader>
+          <div className="text-sm text-foreground/80 py-2">
+            当前设备关联用户为 <span className="font-bold text-foreground">戴某</span>，请选择操作：
+          </div>
+          <div className="flex gap-3 mt-2">
+            <Btn variant="primary" className="flex-1 justify-center" onClick={() => { setConflictOpen(false); setConnected(true); toast("已延用设备用户：戴某"); }}>延用设备用户</Btn>
+            <Btn className="flex-1 justify-center" onClick={() => { setConflictOpen(false); setConnected(true); toast("请在右侧关联新用户"); }}>关联新用户</Btn>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
