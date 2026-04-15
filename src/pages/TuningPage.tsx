@@ -80,44 +80,55 @@ export default function TuningPage({ onNavigate, tuningUser }: Props) {
         {/* Side panel */}
         <div className="flex flex-col gap-4 min-w-0 relative">
 
-          <Card>
-            <PanelTitle title="关联用户">
-              <Btn 
-                className="text-accent-foreground opacity-65 bg-[#eff4fa] border border-solid border-[#39404c]/[0.59]"
-                onClick={() => onNavigate("select-user")}
-              >
-                替换用户
-              </Btn>
-            </PanelTitle>
-            <KV label="姓名" value={tuningUser?.name || "李某"} />
-            <KV label="性别 / 年龄" value={tuningUser?.gender || "男 / 62"} />
-            <KV label="备注" value={tuningUser?.note || "黄斑变性患者"} />
-          </Card>
+          {tuningUser ? (
+            <>
+              <Card>
+                <PanelTitle title="关联用户">
+                  <Btn 
+                    className="text-accent-foreground opacity-65 bg-[#eff4fa] border border-solid border-[#39404c]/[0.59]"
+                    onClick={() => onNavigate("select-user")}
+                  >
+                    替换用户
+                  </Btn>
+                </PanelTitle>
+                <KV label="姓名" value={tuningUser.name} />
+                <KV label="性别 / 年龄" value={tuningUser.gender} />
+                <KV label="备注" value={tuningUser.note || "黄斑变性患者"} />
+              </Card>
 
-          <Card>
-            <PanelTitle title="调参记录">
-              <Btn onClick={() => onNavigate("patient-records")}>更多</Btn>
-            </PanelTitle>
-            <div className="flex flex-col gap-2">
-              {[
-                { date: "2026-04-10 14:30", sn: "9A24" },
-                { date: "2026-04-08 10:15", sn: "9A23" },
-                { date: "2026-03-28 16:40", sn: "9A22" },
-                { date: "2026-03-15 09:20", sn: "9A21" },
-                { date: "2026-02-22 11:05", sn: "9A20" },
-              ].map((r, i) => (
-                <div key={i} className="flex items-center justify-between text-xs py-1.5 border-b border-border/50 last:border-0">
-                  <div className="text-foreground/80">
-                    <span className="text-muted-foreground block mb-0.5">SN {r.sn}</span>
-                    {r.date}
-                  </div>
-                  <Btn onClick={() => toast(`演示：调取 ${r.date} 的调参记录`)}>调取</Btn>
+              <Card>
+                <PanelTitle title="调参记录">
+                  <Btn onClick={() => onNavigate("patient-records")}>更多</Btn>
+                </PanelTitle>
+                <div className="flex flex-col gap-2">
+                  {[
+                    { date: "2026-04-10 14:30", sn: "9A24" },
+                    { date: "2026-04-08 10:15", sn: "9A23" },
+                    { date: "2026-03-28 16:40", sn: "9A22" },
+                    { date: "2026-03-15 09:20", sn: "9A21" },
+                    { date: "2026-02-22 11:05", sn: "9A20" },
+                  ].map((r, i) => (
+                    <div key={i} className="flex items-center justify-between text-xs py-1.5 border-b border-border/50 last:border-0">
+                      <div className="text-foreground/80">
+                        <span className="text-muted-foreground block mb-0.5">SN {r.sn}</span>
+                        {r.date}
+                      </div>
+                      <Btn onClick={() => toast(`演示：调取 ${r.date} 的调参记录`)}>调取</Btn>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </Card>
+              </Card>
 
-          <Btn onClick={() => toast("演示：已删除关联用户")} className="w-full text-center justify-center text-destructive border-destructive/30 hover:bg-destructive/10">删除关联用户</Btn>
+              <Btn onClick={() => toast("演示：已删除关联用户")} className="w-full text-center justify-center text-destructive border-destructive/30 hover:bg-destructive/10">删除关联用户</Btn>
+            </>
+          ) : (
+            <Card className="flex-1 grid place-items-center">
+              <div className="flex flex-col items-center gap-3 py-8">
+                <div className="text-soft text-sm">暂无关联用户</div>
+                <Btn variant="primary" onClick={() => onNavigate("select-user")}>添加关联用户</Btn>
+              </div>
+            </Card>
+          )}
         </div>
       </div>
     </div>
