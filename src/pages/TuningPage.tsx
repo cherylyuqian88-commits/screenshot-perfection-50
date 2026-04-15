@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Card, Tag, PanelTitle, KV, TimelineItem, Btn } from "@/components/ui-parts";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface Props { onNavigate: (page: string) => void; tuningUser?: { name: string; gender: string; note?: string } | null; }
 
 export default function TuningPage({ onNavigate, tuningUser }: Props) {
   const [connected, setConnected] = useState(false);
+  const [conflictOpen, setConflictOpen] = useState(false);
 
   return (
     <div className="animate-fade-in">
