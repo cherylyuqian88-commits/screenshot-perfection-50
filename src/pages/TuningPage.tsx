@@ -3,9 +3,9 @@ import { toast } from "sonner";
 import { Card, Tag, PanelTitle, KV, TimelineItem, Btn } from "@/components/ui-parts";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-interface Props { onNavigate: (page: string) => void; tuningUser?: { name: string; gender: string; note?: string } | null; }
+interface Props { onNavigate: (page: string) => void; tuningUser?: { name: string; gender: string; note?: string } | null; onSetTuningUser?: (user: { name: string; gender: string; note?: string } | null) => void; }
 
-export default function TuningPage({ onNavigate, tuningUser }: Props) {
+export default function TuningPage({ onNavigate, tuningUser, onSetTuningUser }: Props) {
   const [connected, setConnected] = useState(false);
   const [conflictOpen, setConflictOpen] = useState(false);
 
@@ -135,7 +135,7 @@ export default function TuningPage({ onNavigate, tuningUser }: Props) {
             当前设备关联用户为 <span className="font-bold text-foreground">戴某</span>，请选择操作：
           </div>
           <div className="flex gap-3 mt-2">
-            <Btn variant="primary" className="flex-1 justify-center" onClick={() => { setConflictOpen(false); setConnected(true); toast("已延用设备用户：戴某"); }}>延用设备用户</Btn>
+            <Btn variant="primary" className="flex-1 justify-center" onClick={() => { setConflictOpen(false); setConnected(true); onSetTuningUser?.({ name: "戴某", gender: "男 / 52", note: "黄斑变性患者" }); toast("已延用设备用户：戴某"); }}>延用设备用户</Btn>
             <Btn className="flex-1 justify-center" onClick={() => { setConflictOpen(false); setConnected(true); toast("请在右侧关联新用户"); }}>关联新用户</Btn>
           </div>
         </DialogContent>
