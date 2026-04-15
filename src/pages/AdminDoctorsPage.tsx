@@ -21,7 +21,7 @@ const mockDoctors: Doctor[] = [
   { id: "D004", account: "dr_li_004", name: "李医生", phone: "136****8832", org: "深圳爱眼低视力中心", role: "医生", status: "停用", createTime: "2025-11-12" },
 ];
 
-type PendingDoctor = { name: string; account: string; phone: string; isDup: boolean; dupWith?: string };
+type PendingDoctor = { name: string; account: string; phone: string; isDup: boolean; dupWith?: string; origDupAccount?: string; origDupName?: string };
 
 export default function AdminDoctorsPage({ onNavigate }: Props) {
   const [doctors, setDoctors] = useState(mockDoctors);
@@ -59,7 +59,7 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
   const checkAndShowDups = (incoming: PendingDoctor[]) => {
     const checked = incoming.map(p => {
       const dup = doctors.find(d => d.account === p.account);
-      return dup ? { ...p, isDup: true, dupWith: dup.name } : { ...p, isDup: false };
+      return dup ? { ...p, isDup: true, dupWith: dup.name, origDupAccount: dup.account, origDupName: dup.name } : { ...p, isDup: false };
     });
     const okCount = checked.filter(p => !p.isDup).length;
     setPendingDoctors(checked);
@@ -378,52 +378,52 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
 
       {/* 账号重复检测结果 */}
       <Dialog open={dupOpen} onOpenChange={v => { setDupOpen(v); if (!v) setPendingDoctors([]); }}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-3xl">
           <DialogHeader><DialogTitle>创建检测结果</DialogTitle></DialogHeader>
           <div className="py-2">
             <div className="flex items-center gap-3 mb-3">
-              <Tag variant="ok">可创建：{pendingDoctors.length - dupCount} 个</Tag>
-              {dupCount > 0 && <Tag variant="danger">账号重复：{dupCount} 个</Tag>}
+              {dupCount > 0 && <Tag variant="danger">有重复的账号：{dupCount} 个</Tag>}
+              {dupCount === 0 && <Tag variant="ok">无重复账号，共 {pendingDoctors.length} 个可创建</Tag>}
             </div>
             {dupCount > 0 && (
-              <p className="text-sm text-destructive mb-3">以下账号与本机构已有账号重复，请修改后确认：</p>
+              <>
+                <p className="text-sm text-destructive mb-3">以下账号与本机构已有账号重复，请在右侧修改后确认：</p>
+                <TableWrap>
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr>
+                        <th colSpan={2} className="px-3 py-2 border-b border-line bg-secondary/60 text-soft text-center text-[13px] font-semibold">已有账号（不可修改）</th>
+                        <th colSpan={2} className="px-3 py-2 border-b border-line bg-primary/5 text-soft text-center text-[13px] font-semibold">准备创建（可修改）</th>
+                      </tr>
+                      <tr>
+                        {["账号名", "姓名", "账号名", "姓名"].map((h, idx) => (
+                          <th key={`${h}-${idx}`} className="px-3 py-2.5 border-b border-line bg-secondary text-soft text-left text-[13px]">{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {pendingDoctors.filter(p => p.isDup).map((p, i) => {
+                        const realIdx = pendingDoctors.findIndex(q => q === p);
+                        return (
+                          <tr key={i} className="bg-destructive/5">
+                            <td className="px-3 py-2.5 border-b border-line text-[13px] text-muted-foreground">{p.origDupAccount || "—"}</td>
+                            <td className="px-3 py-2.5 border-b border-line text-[13px] text-muted-foreground">{p.origDupName || "—"}</td>
+                            <td className="px-3 py-2.5 border-b border-line text-[13px]">
+                              <Input
+                                className="h-8 text-[13px]"
+                                value={p.account}
+                                onChange={e => handleDupAccountChange(realIdx, e.target.value)}
+                              />
+                            </td>
+                            <td className="px-3 py-2.5 border-b border-line text-[13px]">{p.name}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </TableWrap>
+              </>
             )}
-            <TableWrap>
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr>
-                    {["姓名", "登录账号", "手机号", "状态"].map(h => (
-                      <th key={h} className="px-3 py-2.5 border-b border-line bg-secondary text-soft text-left text-[13px]">{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {pendingDoctors.map((p, i) => (
-                    <tr key={i} className={cn(p.isDup && "bg-destructive/5")}>
-                      <td className="px-3 py-2.5 border-b border-line text-[13px]">{p.name}</td>
-                      <td className="px-3 py-2.5 border-b border-line text-[13px]">
-                        {p.isDup ? (
-                          <div className="flex flex-col gap-1">
-                            <Input
-                              className="h-8 text-[13px]"
-                              value={p.account}
-                              onChange={e => handleDupAccountChange(i, e.target.value)}
-                            />
-                            <span className="text-xs text-destructive">与「{p.dupWith}」账号重复</span>
-                          </div>
-                        ) : (
-                          p.account
-                        )}
-                      </td>
-                      <td className="px-3 py-2.5 border-b border-line text-[13px]">{p.phone}</td>
-                      <td className="px-3 py-2.5 border-b border-line text-[13px]">
-                        {p.isDup ? <Tag variant="danger">重复</Tag> : <Tag variant="ok">正常</Tag>}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </TableWrap>
           </div>
           <DialogFooter>
             <Btn onClick={() => { setDupOpen(false); setPendingDoctors([]); }}>取消</Btn>
