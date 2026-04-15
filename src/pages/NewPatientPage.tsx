@@ -42,7 +42,8 @@ export default function NewPatientPage({ onNavigate }: Props) {
               </div>
             ))}
           </div>
-          <div className="flex gap-2.5 flex-wrap mt-3">
+          <div className="flex gap-2.5 justify-end mt-3">
+            <Btn onClick={() => onNavigate("patients")}>取消</Btn>
             <Btn variant="primary" onClick={() => setOpen(true)}>确认建档</Btn>
           </div>
         </Card>
