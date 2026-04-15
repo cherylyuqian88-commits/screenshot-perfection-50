@@ -104,7 +104,7 @@ export default function Index() {
         else navigateTo(p, from);
       }} onTuningPair={(user) => { setTuningUser(user); setActivePage("tuning"); }} />;
       case "new-patient": return <NewPatientPage onNavigate={setActivePage} />;
-      case "tuning": return <TuningPage tuningUser={tuningUser} onNavigate={(p: string) => {
+      case "tuning": return <TuningPage tuningUser={tuningUser} onSetTuningUser={setTuningUser} onNavigate={(p: string) => {
         if (p === "patient-records") navigateTo(p, "tuning");
         else setActivePage(p);
       }} />;

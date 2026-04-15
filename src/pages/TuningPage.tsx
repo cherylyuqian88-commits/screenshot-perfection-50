@@ -3,9 +3,9 @@ import { toast } from "sonner";
 import { Card, Tag, PanelTitle, KV, TimelineItem, Btn } from "@/components/ui-parts";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-interface Props { onNavigate: (page: string) => void; tuningUser?: { name: string; gender: string; note?: string } | null; }
+interface Props { onNavigate: (page: string) => void; tuningUser?: { name: string; gender: string; note?: string } | null; onSetTuningUser?: (user: { name: string; gender: string; note?: string } | null) => void; }
 
-export default function TuningPage({ onNavigate, tuningUser }: Props) {
+export default function TuningPage({ onNavigate, tuningUser, onSetTuningUser }: Props) {
   const [connected, setConnected] = useState(false);
   const [conflictOpen, setConflictOpen] = useState(false);
 
