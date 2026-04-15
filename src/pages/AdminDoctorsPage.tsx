@@ -21,6 +21,8 @@ const mockDoctors: Doctor[] = [
   { id: "D004", account: "dr_li_004", name: "李医生", phone: "136****8832", org: "深圳爱眼低视力中心", role: "医生", status: "停用", createTime: "2025-11-12" },
 ];
 
+type PendingDoctor = { name: string; account: string; phone: string; isDup: boolean; dupWith?: string };
+
 export default function AdminDoctorsPage({ onNavigate }: Props) {
   const [doctors, setDoctors] = useState(mockDoctors);
   const [recycleBin, setRecycleBin] = useState<Doctor[]>([]);
@@ -38,11 +40,14 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
   const [newName, setNewName] = useState("");
   const [newAccount, setNewAccount] = useState("");
   const [newPhone, setNewPhone] = useState("");
-  const [dupOpen, setDupOpen] = useState(false);
-  const [dupDoctor, setDupDoctor] = useState<Doctor | null>(null);
 
   const [editName, setEditName] = useState("");
   const [editPhone, setEditPhone] = useState("");
+
+  // Duplicate review dialog
+  const [dupOpen, setDupOpen] = useState(false);
+  const [pendingDoctors, setPendingDoctors] = useState<PendingDoctor[]>([]);
+  const [pendingOkCount, setPendingOkCount] = useState(0);
 
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -50,28 +55,72 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
     d.name.includes(search) || d.account.includes(search) || d.phone.includes(search)
   );
 
-  const handleAdd = () => {
-    if (!newName || !newAccount) { toast.error("请填写必填项"); return; }
-    const dupMatch = doctors.find(d => d.account === newAccount);
-    if (dupMatch) {
-      setDupDoctor(dupMatch);
-      setDupOpen(true);
-      return;
-    }
-    confirmAdd();
+  // Check duplicates and open review dialog
+  const checkAndShowDups = (incoming: PendingDoctor[]) => {
+    const checked = incoming.map(p => {
+      const dup = doctors.find(d => d.account === p.account);
+      return dup ? { ...p, isDup: true, dupWith: dup.name } : { ...p, isDup: false };
+    });
+    const okCount = checked.filter(p => !p.isDup).length;
+    setPendingDoctors(checked);
+    setPendingOkCount(okCount);
+    setDupOpen(true);
   };
 
-  const confirmAdd = () => {
-    setDoctors(prev => [...prev, {
-      id: `D${String(prev.length + 1).padStart(3, "0")}`,
-      account: newAccount, name: newName, phone: newPhone,
+  const handleAdd = () => {
+    if (!newName || !newAccount) { toast.error("请填写必填项"); return; }
+    checkAndShowDups([{ name: newName, account: newAccount, phone: newPhone, isDup: false }]);
+  };
+
+  const handleDupAccountChange = (index: number, newAcc: string) => {
+    setPendingDoctors(prev => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], account: newAcc };
+      // Re-check dup status
+      const dup = doctors.find(d => d.account === newAcc);
+      // Also check against other pending items
+      const dupInPending = updated.findIndex((p, i) => i !== index && p.account === newAcc) >= 0;
+      updated[index].isDup = !!(dup || dupInPending);
+      updated[index].dupWith = dup ? dup.name : dupInPending ? "待创建账号" : undefined;
+      return updated;
+    });
+  };
+
+  // Recheck all pending for cross-duplicates
+  const recheckPending = (list: PendingDoctor[]): PendingDoctor[] => {
+    return list.map((p, i) => {
+      const dupExisting = doctors.find(d => d.account === p.account);
+      const dupInPending = list.findIndex((q, j) => j !== i && q.account === p.account) >= 0;
+      return {
+        ...p,
+        isDup: !!(dupExisting || dupInPending),
+        dupWith: dupExisting ? dupExisting.name : dupInPending ? "待创建账号" : undefined,
+      };
+    });
+  };
+
+  const handleConfirmPending = () => {
+    // Re-validate
+    const rechecked = recheckPending(pendingDoctors);
+    const stillDup = rechecked.filter(p => p.isDup);
+    if (stillDup.length > 0) {
+      setPendingDoctors(rechecked);
+      toast.error("仍有重复账号，请修改后再确认");
+      return;
+    }
+    // Add all
+    const newDocs: Doctor[] = rechecked.map((p, i) => ({
+      id: `D${String(doctors.length + i + 1).padStart(3, "0")}`,
+      account: p.account, name: p.name, phone: p.phone,
       org: "深圳爱眼低视力中心", role: "医生", status: "启用",
       createTime: "2026-04-15"
-    }]);
-    toast.success(`已添加医生账号：${newAccount}`);
-    setAddOpen(false);
+    }));
+    setDoctors(prev => [...prev, ...newDocs]);
+    toast.success(`成功创建 ${newDocs.length} 个医生账号`);
     setDupOpen(false);
-    setDupDoctor(null);
+    setAddOpen(false);
+    setImportOpen(false);
+    setPendingDoctors([]);
     setNewName(""); setNewAccount(""); setNewPhone("");
   };
 
@@ -101,17 +150,16 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
     setDeleteOpen(false);
   };
 
-
   const handleImportFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const mockImported: Doctor[] = [
-      { id: `D${doctors.length + 1}`, account: "dr_zhao_imp1", name: "赵医生", phone: "137****5501", org: "深圳爱眼低视力中心", role: "医生", status: "启用", createTime: "2026-04-15" },
-      { id: `D${doctors.length + 2}`, account: "dr_sun_imp2", name: "孙医生", phone: "133****7702", org: "深圳爱眼低视力中心", role: "医生", status: "启用", createTime: "2026-04-15" },
+    // Mock imported data - in real app would parse the file
+    const mockImported: PendingDoctor[] = [
+      { name: "赵医生", account: "dr_zhao_imp1", phone: "137****5501", isDup: false },
+      { name: "孙医生", account: "dr_chen_001", phone: "133****7702", isDup: false }, // intentional dup for demo
+      { name: "周医生", account: "dr_zhou_imp3", phone: "131****9903", isDup: false },
     ];
-    setDoctors(prev => [...prev, ...mockImported]);
-    toast.success(`成功导入 ${mockImported.length} 个医生账号`);
-    setImportOpen(false);
+    checkAndShowDups(mockImported);
     if (fileRef.current) fileRef.current.value = "";
   };
 
@@ -133,6 +181,7 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
   };
 
   const recycleAllSelected = recycleBin.length > 0 && recycleSelected.length === recycleBin.length;
+  const dupCount = pendingDoctors.filter(p => p.isDup).length;
 
   return (
     <div className="animate-fade-in">
@@ -179,7 +228,6 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
                     <div className="flex items-center gap-1.5">
                       <button onClick={() => { setSelectedDoctor(d); setEditName(d.name); setEditPhone(d.phone); setEditOpen(true); }} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors cursor-pointer bg-transparent border-0">编辑</button>
                       <button onClick={() => { setSelectedDoctor(d); setResetOpen(true); }} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors cursor-pointer bg-transparent border-0">重置密码</button>
-                      
                       <button onClick={() => { setSelectedDoctor(d); setDeleteOpen(true); }} className="text-xs text-destructive hover:text-destructive/80 underline underline-offset-2 transition-colors cursor-pointer bg-transparent border-0">删除</button>
                     </div>
                   </td>
@@ -328,21 +376,58 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
         </DialogContent>
       </Dialog>
 
-      {/* 账号重复提示 */}
-      <Dialog open={dupOpen} onOpenChange={v => { setDupOpen(v); if (!v) setDupDoctor(null); }}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>账号重复提示</DialogTitle></DialogHeader>
+      {/* 账号重复检测结果 */}
+      <Dialog open={dupOpen} onOpenChange={v => { setDupOpen(v); if (!v) setPendingDoctors([]); }}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader><DialogTitle>创建检测结果</DialogTitle></DialogHeader>
           <div className="py-2">
-            <p className="text-sm">本机构已存在相同登录账号：</p>
-            <div className="bg-secondary/80 rounded-xl px-4 py-3 mt-2 text-sm">
-              <p>账号：<strong>{dupDoctor?.account}</strong></p>
-              <p>姓名：<strong>{dupDoctor?.name}</strong></p>
-              <p>手机号：{dupDoctor?.phone}</p>
+            <div className="flex items-center gap-3 mb-3">
+              <Tag variant="ok">可创建：{pendingDoctors.length - dupCount} 个</Tag>
+              {dupCount > 0 && <Tag variant="danger">账号重复：{dupCount} 个</Tag>}
             </div>
-            <p className="text-sm mt-3">请修改登录账号后重试。</p>
+            {dupCount > 0 && (
+              <p className="text-sm text-destructive mb-3">以下账号与本机构已有账号重复，请修改后确认：</p>
+            )}
+            <TableWrap>
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr>
+                    {["姓名", "登录账号", "手机号", "状态"].map(h => (
+                      <th key={h} className="px-3 py-2.5 border-b border-line bg-secondary text-soft text-left text-[13px]">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {pendingDoctors.map((p, i) => (
+                    <tr key={i} className={cn(p.isDup && "bg-destructive/5")}>
+                      <td className="px-3 py-2.5 border-b border-line text-[13px]">{p.name}</td>
+                      <td className="px-3 py-2.5 border-b border-line text-[13px]">
+                        {p.isDup ? (
+                          <div className="flex flex-col gap-1">
+                            <Input
+                              className="h-8 text-[13px]"
+                              value={p.account}
+                              onChange={e => handleDupAccountChange(i, e.target.value)}
+                            />
+                            <span className="text-xs text-destructive">与「{p.dupWith}」账号重复</span>
+                          </div>
+                        ) : (
+                          p.account
+                        )}
+                      </td>
+                      <td className="px-3 py-2.5 border-b border-line text-[13px]">{p.phone}</td>
+                      <td className="px-3 py-2.5 border-b border-line text-[13px]">
+                        {p.isDup ? <Tag variant="danger">重复</Tag> : <Tag variant="ok">正常</Tag>}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </TableWrap>
           </div>
           <DialogFooter>
-            <Btn onClick={() => setDupOpen(false)}>返回修改</Btn>
+            <Btn onClick={() => { setDupOpen(false); setPendingDoctors([]); }}>取消</Btn>
+            <Btn variant="primary" onClick={handleConfirmPending}>确认创建</Btn>
           </DialogFooter>
         </DialogContent>
       </Dialog>
