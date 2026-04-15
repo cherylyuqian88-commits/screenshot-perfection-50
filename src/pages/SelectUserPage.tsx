@@ -51,7 +51,7 @@ export default function SelectUserPage({ onNavigate }: Props) {
           <table className="w-full border-collapse min-w-[980px]">
             <thead>
               <tr>
-                {["姓名", "关联机构", "设备SN", "活跃度", "近7天日均时长", "医生", "最近调参时间"].map(h => (
+                {["姓名", "手机号", "关联机构", "活跃度", "近7天日均时长", "医生", "最近调参时间"].map(h => (
                   <th key={h} className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1]">{h}</th>
                 ))}
               </tr>
@@ -67,8 +67,8 @@ export default function SelectUserPage({ onNavigate }: Props) {
                   )}
                 >
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.name}</td>
+                  <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.phone}</td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.org}</td>
-                  <td className="px-4 py-3.5 border-b border-line text-[13px]">{u.device}</td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">
                     <Tag variant={u.activity === "高" ? "ok" : u.activity === "中" ? "info" : "danger"}>{u.activity}</Tag>
                   </td>
