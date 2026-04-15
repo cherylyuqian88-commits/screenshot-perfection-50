@@ -39,41 +39,11 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
   const [newAccount, setNewAccount] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [dupOpen, setDupOpen] = useState(false);
-  const [dupDoctor, setDupDoctor] = useState<Doctor | null>(null);
 
-  const [editName, setEditName] = useState("");
-  const [editPhone, setEditPhone] = useState("");
-
-  const fileRef = useRef<HTMLInputElement>(null);
-
-  const filtered = doctors.filter(d =>
-    d.name.includes(search) || d.account.includes(search) || d.phone.includes(search)
-  );
-
-  const handleAdd = () => {
-    if (!newName || !newAccount) { toast.error("请填写必填项"); return; }
-    const dupMatch = doctors.find(d => d.account === newAccount);
-    if (dupMatch) {
-      setDupDoctor(dupMatch);
-      setDupOpen(true);
-      return;
-    }
-    confirmAdd();
-  };
-
-  const confirmAdd = () => {
-    setDoctors(prev => [...prev, {
-      id: `D${String(prev.length + 1).padStart(3, "0")}`,
-      account: newAccount, name: newName, phone: newPhone,
-      org: "深圳爱眼低视力中心", role: "医生", status: "启用",
-      createTime: "2026-04-15"
-    }]);
-    toast.success(`已添加医生账号：${newAccount}`);
-    setAddOpen(false);
-    setDupOpen(false);
-    setDupDoctor(null);
-    setNewName(""); setNewAccount(""); setNewPhone("");
-  };
+  // Pending doctors for duplicate review
+  type PendingDoctor = { name: string; account: string; phone: string; isDup: boolean; dupWith?: string };
+  const [pendingDoctors, setPendingDoctors] = useState<PendingDoctor[]>([]);
+  const [pendingOkCount, setPendingOkCount] = useState(0);
 
   const handleEdit = () => {
     if (!selectedDoctor) return;
