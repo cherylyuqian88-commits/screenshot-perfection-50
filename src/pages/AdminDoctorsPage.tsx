@@ -52,14 +52,26 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
 
   const handleAdd = () => {
     if (!newName || !newAccount) { toast.error("请填写必填项"); return; }
-    toast.success(`已添加医生账号：${newAccount}`);
+    const dupMatch = doctors.find(d => d.account === newAccount);
+    if (dupMatch) {
+      setDupDoctor(dupMatch);
+      setDupOpen(true);
+      return;
+    }
+    confirmAdd();
+  };
+
+  const confirmAdd = () => {
     setDoctors(prev => [...prev, {
       id: `D${String(prev.length + 1).padStart(3, "0")}`,
       account: newAccount, name: newName, phone: newPhone,
       org: "深圳爱眼低视力中心", role: "医生", status: "启用",
       createTime: "2026-04-15"
     }]);
+    toast.success(`已添加医生账号：${newAccount}`);
     setAddOpen(false);
+    setDupOpen(false);
+    setDupDoctor(null);
     setNewName(""); setNewAccount(""); setNewPhone("");
   };
 
