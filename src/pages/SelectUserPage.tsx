@@ -1,27 +1,50 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Card, Tag, PanelTitle, Btn, TableWrap } from "@/components/ui-parts";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
 interface Props { onNavigate: (page: string) => void; }
 
 const users = [
-  { name: "李某", id: "SZ202604120001", org: "深圳爱眼低视力中心", device: "SN-20260301-0042", activity: "高", avgDuration: "4.2h", doctor: "陈医生", lastTuning: "2026-04-12 10:12" },
-  { name: "张某", id: "SZ202603180021", org: "深圳爱眼低视力中心", device: "SN-20260218-0087", activity: "中", avgDuration: "2.8h", doctor: "王医生", lastTuning: "2026-04-10 14:30" },
-  { name: "赵某", id: "SZ202602250033", org: "深圳爱眼低视力中心", device: "SN-20260115-0023", activity: "高", avgDuration: "3.6h", doctor: "陈医生", lastTuning: "2026-04-11 09:45" },
-  { name: "刘某", id: "SZ202601100045", org: "深圳爱眼低视力中心", device: "SN-20251220-0061", activity: "低", avgDuration: "0.8h", doctor: "李医生", lastTuning: "2026-03-28 16:20" },
-  { name: "陈某", id: "SZ202603050052", org: "深圳爱眼低视力中心", device: "SN-20260305-0099", activity: "中", avgDuration: "2.1h", doctor: "王医生", lastTuning: "2026-04-09 11:00" },
-  { name: "孙某", id: "SZ202604010060", org: "深圳爱眼低视力中心", device: "SN-20260401-0110", activity: "高", avgDuration: "5.1h", doctor: "陈医生", lastTuning: "2026-04-12 08:30" },
+  { name: "李某", id: "SZ202604120001", phone: "138****1234", org: "深圳爱眼低视力中心", device: "SN-20260301-0042", activity: "高", avgDuration: "4.2h", doctor: "陈医生", lastTuning: "2026-04-12 10:12" },
+  { name: "张某", id: "SZ202603180021", phone: "135****6620", org: "深圳爱眼低视力中心", device: "SN-20260218-0087", activity: "中", avgDuration: "2.8h", doctor: "王医生", lastTuning: "2026-04-10 14:30" },
+  { name: "赵某", id: "SZ202602250033", phone: "139****4478", org: "深圳爱眼低视力中心", device: "SN-20260115-0023", activity: "高", avgDuration: "3.6h", doctor: "陈医生", lastTuning: "2026-04-11 09:45" },
+  { name: "刘某", id: "SZ202601100045", phone: "136****8832", org: "深圳爱眼低视力中心", device: "SN-20251220-0061", activity: "低", avgDuration: "0.8h", doctor: "李医生", lastTuning: "2026-03-28 16:20" },
+  { name: "陈某", id: "SZ202603050052", phone: "158****2210", org: "深圳爱眼低视力中心", device: "SN-20260305-0099", activity: "中", avgDuration: "2.1h", doctor: "王医生", lastTuning: "2026-04-09 11:00" },
+  { name: "孙某", id: "SZ202604010060", phone: "133****7756", org: "深圳爱眼低视力中心", device: "SN-20260401-0110", activity: "高", avgDuration: "5.1h", doctor: "陈医生", lastTuning: "2026-04-12 08:30" },
 ];
 
 export default function SelectUserPage({ onNavigate }: Props) {
   const [selected, setSelected] = useState<string | null>(null);
+  const [doctorFilter, setDoctorFilter] = useState<string>("all");
+  const [search, setSearch] = useState("");
+
+  const filtered = users.filter(u => {
+    if (doctorFilter !== "all" && u.doctor !== doctorFilter) return false;
+    if (search && !u.name.includes(search) && !u.phone.includes(search)) return false;
+    return true;
+  });
 
   return (
     <div className="animate-fade-in">
       <Card>
         <PanelTitle title="选择关联用户">
-          <Btn onClick={() => onNavigate("tuning")}>返回调参</Btn>
+          <div className="flex items-center gap-2.5">
+            <Select value={doctorFilter} onValueChange={setDoctorFilter}>
+              <SelectTrigger className="w-[130px] rounded-[14px] text-sm h-[38px]">
+                <SelectValue placeholder="筛选医生" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">全部医生</SelectItem>
+                <SelectItem value="陈医生">陈医生</SelectItem>
+                <SelectItem value="王医生">王医生</SelectItem>
+                <SelectItem value="李医生">李医生</SelectItem>
+              </SelectContent>
+            </Select>
+            <input className="border border-line rounded-[14px] bg-card px-3.5 py-2.5 text-foreground outline-none max-w-[220px] text-sm focus:border-brand focus:shadow-[0_0_0_4px_hsl(197_92%_60%/0.12)]" placeholder="搜索姓名/手机号" value={search} onChange={e => setSearch(e.target.value)} />
+            <Btn onClick={() => onNavigate("tuning")}>返回调参</Btn>
+          </div>
         </PanelTitle>
 
         <TableWrap>
@@ -34,7 +57,7 @@ export default function SelectUserPage({ onNavigate }: Props) {
               </tr>
             </thead>
             <tbody>
-              {users.map((u) => (
+              {filtered.map((u) => (
                 <tr
                   key={u.id}
                   onClick={() => setSelected(u.id)}
@@ -61,7 +84,7 @@ export default function SelectUserPage({ onNavigate }: Props) {
         <div className="flex items-center justify-end gap-2.5 mt-4">
           <Btn variant="primary" onClick={() => {
             if (!selected) { toast("请先选择一个用户"); return; }
-            const user = users.find(u => u.id === selected);
+            const user = filtered.find(u => u.id === selected);
             toast(`已选择关联用户：${user?.name}`);
             onNavigate("tuning");
           }}>确定选择</Btn>
