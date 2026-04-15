@@ -327,6 +327,25 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
           <DialogFooter><Btn onClick={() => setEmptyRecycleOpen(false)}>取消</Btn><Btn variant="danger" onClick={handleEmptyRecycleBin}>确认清空</Btn></DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* 账号重复提示 */}
+      <Dialog open={dupOpen} onOpenChange={v => { setDupOpen(v); if (!v) setDupDoctor(null); }}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>账号重复提示</DialogTitle></DialogHeader>
+          <div className="py-2">
+            <p className="text-sm">本机构已存在相同登录账号：</p>
+            <div className="bg-secondary/80 rounded-xl px-4 py-3 mt-2 text-sm">
+              <p>账号：<strong>{dupDoctor?.account}</strong></p>
+              <p>姓名：<strong>{dupDoctor?.name}</strong></p>
+              <p>手机号：{dupDoctor?.phone}</p>
+            </div>
+            <p className="text-sm mt-3">请修改登录账号后重试。</p>
+          </div>
+          <DialogFooter>
+            <Btn onClick={() => setDupOpen(false)}>返回修改</Btn>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
