@@ -84,7 +84,7 @@ export default function SelectUserPage({ onNavigate }: Props) {
         <div className="flex items-center justify-end gap-2.5 mt-4">
           <Btn variant="primary" onClick={() => {
             if (!selected) { toast("请先选择一个用户"); return; }
-            const user = users.find(u => u.id === selected);
+            const user = filtered.find(u => u.id === selected);
             toast(`已选择关联用户：${user?.name}`);
             onNavigate("tuning");
           }}>确定选择</Btn>
