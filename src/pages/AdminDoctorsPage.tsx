@@ -131,11 +131,12 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
-            <Btn onClick={() => setRecycleOpen(true)}>
-              回收站{recycleBin.length > 0 ? `(${recycleBin.length})` : ""}
-            </Btn>
+            <Btn onClick={() => {}}>搜索</Btn>
             <Btn onClick={() => setImportOpen(true)}>批量导入</Btn>
             <Btn variant="primary" onClick={() => setAddOpen(true)}>新增医生</Btn>
+            <Btn className="!bg-[hsl(28,80%,52%)] !text-white hover:!bg-[hsl(28,80%,42%)]" onClick={() => setRecycleOpen(true)}>
+              回收站{recycleBin.length > 0 ? `(${recycleBin.length})` : ""}
+            </Btn>
           </div>
         </PanelTitle>
 
