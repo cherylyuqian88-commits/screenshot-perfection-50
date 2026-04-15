@@ -57,7 +57,7 @@ export default function SelectUserPage({ onNavigate }: Props) {
               </tr>
             </thead>
             <tbody>
-              {users.map((u) => (
+              {filtered.map((u) => (
                 <tr
                   key={u.id}
                   onClick={() => setSelected(u.id)}
