@@ -21,7 +21,7 @@ const mockDoctors: Doctor[] = [
   { id: "D004", account: "dr_li_004", name: "李医生", phone: "136****8832", org: "深圳爱眼低视力中心", role: "医生", status: "停用", createTime: "2025-11-12" },
 ];
 
-type PendingDoctor = { name: string; account: string; phone: string; isDup: boolean; dupWith?: string };
+type PendingDoctor = { name: string; account: string; phone: string; isDup: boolean; dupWith?: string; origDupAccount?: string; origDupName?: string };
 
 export default function AdminDoctorsPage({ onNavigate }: Props) {
   const [doctors, setDoctors] = useState(mockDoctors);
