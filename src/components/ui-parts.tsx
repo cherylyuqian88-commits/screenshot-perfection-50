@@ -87,7 +87,7 @@ export function Btn({ children, variant = "secondary", className, onClick }: {
 }) {
   const styles: Record<string, string> = {
     primary: "bg-gradient-to-r from-[hsl(199,89%,49%)] to-[hsl(224,76%,48%)] text-primary-foreground shadow-[0_12px_28px_hsl(224_76%_48%/0.24)]",
-    secondary: "bg-card text-foreground border border-line",
+    secondary: "bg-primary-foreground text-foreground border border-line",
     ghost: "bg-[hsl(217,100%,96%)] text-[hsl(224,76%,48%)] border border-[hsl(213,94%,87%)]",
     danger: "bg-[hsl(0,86%,97%)] text-[hsl(0,63%,31%)] border border-[hsl(0,93%,82%)]",
     ok: "bg-[hsl(151,81%,96%)] text-[hsl(162,73%,27%)] border border-[hsl(142,77%,73%)]",

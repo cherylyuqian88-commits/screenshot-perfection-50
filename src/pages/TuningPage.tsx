@@ -22,8 +22,8 @@ export default function TuningPage({ onNavigate, tuningUser, onSetTuningUser }: 
             <div className="flex gap-2 items-center">
               {connected ? (
                 <>
-                  <span className="text-xs text-sidebar-foreground/60 mr-1">RX-A102 / 9A24 / V0.5.1</span>
-                  <span className="text-xs px-1.5 py-0.5 rounded bg-[#0f1729] text-[#2ce2e2]">USB · 电量 82%</span>
+                  <span className="text-xs text-sidebar-foreground/60 mr-1">固件系统版本号： V0.5.1</span>
+                  <span className="text-xs px-1.5 py-0.5 rounded bg-[#0f1729] text-[#2ce2e2]">设备电量 82%</span>
                   <Tag variant="info">已连接</Tag>
                 </>
               ) : (
