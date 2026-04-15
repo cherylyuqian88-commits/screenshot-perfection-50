@@ -38,6 +38,8 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
   const [newName, setNewName] = useState("");
   const [newAccount, setNewAccount] = useState("");
   const [newPhone, setNewPhone] = useState("");
+  const [dupOpen, setDupOpen] = useState(false);
+  const [dupDoctor, setDupDoctor] = useState<Doctor | null>(null);
 
   const [editName, setEditName] = useState("");
   const [editPhone, setEditPhone] = useState("");
