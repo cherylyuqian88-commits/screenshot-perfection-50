@@ -133,6 +133,21 @@ export default function TuningPage({ onNavigate, tuningUser }: Props) {
           )}
         </div>
       </div>
+
+      <Dialog open={conflictOpen} onOpenChange={setConflictOpen}>
+        <DialogContent className="max-w-[420px]">
+          <DialogHeader>
+            <DialogTitle>关联用户冲突</DialogTitle>
+          </DialogHeader>
+          <div className="text-sm text-foreground/80 py-2">
+            当前设备关联用户为 <span className="font-bold text-foreground">戴某</span>，请选择操作：
+          </div>
+          <div className="flex gap-3 mt-2">
+            <Btn variant="primary" className="flex-1 justify-center" onClick={() => { setConflictOpen(false); setConnected(true); toast("已延用设备用户：戴某"); }}>延用设备用户</Btn>
+            <Btn className="flex-1 justify-center" onClick={() => { setConflictOpen(false); setConnected(true); toast("请在右侧关联新用户"); }}>关联新用户</Btn>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
