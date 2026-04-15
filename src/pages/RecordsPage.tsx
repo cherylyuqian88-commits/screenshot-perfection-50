@@ -87,7 +87,7 @@ export default function RecordsPage({ onNavigate }: Props) {
           <table className="w-full border-collapse min-w-[980px]">
             <thead>
               <tr>
-                {["调试时间","设备SN","关联用户","参数编号","操作医生","结果"].map(h => (
+                {["调试时间","设备SN","关联用户","参数编号","操作医生"].map(h => (
                   <th key={h} className="px-4 py-3.5 border-b border-line bg-secondary text-soft text-left text-[13px] sticky top-0 z-[1]">{h}</th>
                 ))}
               </tr>
@@ -100,7 +100,7 @@ export default function RecordsPage({ onNavigate }: Props) {
                   <td className="px-4 py-3.5 border-b border-line text-[13px] text-muted-foreground">{r.user || "—"}</td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{r.template}</td>
                   <td className="px-4 py-3.5 border-b border-line text-[13px]">{r.doctor}</td>
-                  <td className="px-4 py-3.5 border-b border-line text-[13px]">{resultTag(r.result)}</td>
+                  
                 </tr>
               ))}
             </tbody>
