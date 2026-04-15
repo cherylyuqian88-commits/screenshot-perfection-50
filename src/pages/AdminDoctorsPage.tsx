@@ -406,8 +406,8 @@ export default function AdminDoctorsPage({ onNavigate }: Props) {
                         const realIdx = pendingDoctors.findIndex(q => q === p);
                         return (
                           <tr key={i} className="bg-destructive/5">
-                            <td className="px-3 py-2.5 border-b border-line text-[13px] text-muted-foreground">{p.dupWith ? doctors.find(d => d.account === p.account)?.account || p.account : p.account}</td>
-                            <td className="px-3 py-2.5 border-b border-line text-[13px] text-muted-foreground">{p.dupWith && p.dupWith !== "待创建账号" ? p.dupWith : "—"}</td>
+                            <td className="px-3 py-2.5 border-b border-line text-[13px] text-muted-foreground">{p.origDupAccount || "—"}</td>
+                            <td className="px-3 py-2.5 border-b border-line text-[13px] text-muted-foreground">{p.origDupName || "—"}</td>
                             <td className="px-3 py-2.5 border-b border-line text-[13px]">
                               <Input
                                 className="h-8 text-[13px]"
