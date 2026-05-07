@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Card, Tag, PanelTitle, KV, TimelineItem, Btn } from "@/components/ui-parts";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import TuningSimulator from "@/components/TuningSimulator";
 
 interface Props { onNavigate: (page: string) => void; tuningUser?: { name: string; gender: string; note?: string } | null; onSetTuningUser?: (user: { name: string; gender: string; note?: string } | null) => void; }
 
@@ -34,19 +35,7 @@ export default function TuningPage({ onNavigate, tuningUser, onSetTuningUser }: 
 
           {connected ? (
             <>
-              <div className="flex-1 grid place-items-center text-primary-foreground text-center p-8"
-                style={{
-                  background: "radial-gradient(circle at 50% 50%, hsl(197 92% 60% / 0.15), transparent 34%), linear-gradient(180deg, hsl(224 76% 48% / 0.08), transparent 40%)"
-                }}
-              >
-                <div>
-                  <div className="text-[38px] font-extrabold mb-3 tracking-wide">调参界面占位区</div>
-                  <div className="text-[15px] text-sidebar-foreground/70 max-w-[640px] leading-[1.8]">
-                    后续这里可放：实时取景 / 视野补偿范围示意 / 参数滑杆 / 预设模板 / 保存与回退按钮。
-                  </div>
-                </div>
-              </div>
-            
+              <TuningSimulator />
             </>
           ) : (
             <div className="flex-1 grid place-items-center text-primary-foreground text-center p-8 relative">
