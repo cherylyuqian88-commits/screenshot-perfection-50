@@ -1,4 +1,11 @@
 import { useEffect, useRef, useState, useCallback } from "react";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Eye, Wand2, ZoomIn, Focus, BookOpen, RotateCcw, Save } from "lucide-react";
+import previewImg from "@/assets/tuning-preview.png";
 
 type Mode = "quick" | "enhance" | "center" | "periphery" | "reading";
 
@@ -7,50 +14,13 @@ interface CenterParams { zoomFactor: number; windowWidth: number; windowHeight: 
 interface PeripheryParams { diameter: number; magnification: number; offsetXRatio: number; offsetYRatio: number; }
 interface ReadingParams { scheme: "bw" | "wb" | "yellowBlack" | "blueYellow" | "custom"; customContrast: number; }
 
-const MODE_LABELS: Record<Mode, string> = {
-  quick: "视野快速检查",
-  enhance: "实时画面增强偏好",
-  center: "中心放大",
-  periphery: "旁中心放大",
-  reading: "阅读模式配色",
+const MODE_META: Record<Mode, { label: string; icon: React.ComponentType<{ className?: string }> }> = {
+  quick: { label: "视野快速检查", icon: Eye },
+  enhance: { label: "实时画面增强", icon: Wand2 },
+  center: { label: "中心放大", icon: ZoomIn },
+  periphery: { label: "旁中心放大", icon: Focus },
+  reading: { label: "阅读模式配色", icon: BookOpen },
 };
-
-function generateTestImage(width: number, height: number): ImageData {
-  const off = document.createElement("canvas");
-  off.width = width; off.height = height;
-  const c = off.getContext("2d")!;
-  c.fillStyle = "#1a2a32";
-  c.fillRect(0, 0, width, height);
-  const grad = c.createLinearGradient(0, 0, width, height);
-  grad.addColorStop(0, "#e34d4d");
-  grad.addColorStop(0.25, "#f7c542");
-  grad.addColorStop(0.5, "#4caf50");
-  grad.addColorStop(0.75, "#2a9fd6");
-  grad.addColorStop(1, "#b55eff");
-  c.fillStyle = grad;
-  c.fillRect(0, 0, width, height);
-  c.strokeStyle = "rgba(255,255,200,0.7)";
-  c.lineWidth = 1.5;
-  for (let i = 0; i < width; i += 70) {
-    c.beginPath(); c.moveTo(i, 0); c.lineTo(i, height); c.stroke();
-    c.beginPath(); c.moveTo(0, i % height); c.lineTo(width, i % height); c.stroke();
-  }
-  c.font = "Bold 34px 'Courier New'";
-  c.fillStyle = "#fff8e7";
-  c.fillText("AR VISION", 60, 90);
-  c.font = "22px monospace";
-  c.fillStyle = "#f9f2cf";
-  c.fillText("饱和/对比/边缘/滤光", 520, 450);
-  c.fillStyle = "#ffefb0";
-  c.fillText("实时视觉增强", 720, 70);
-  c.fillStyle = "#dbb077";
-  c.beginPath(); c.arc(800, 300, 48, 0, Math.PI * 2); c.fill();
-  c.fillStyle = "#402812";
-  c.beginPath(); c.arc(775, 285, 9, 0, Math.PI * 2); c.arc(825, 285, 9, 0, Math.PI * 2); c.fill();
-  c.fillStyle = "#b45f2b";
-  c.beginPath(); c.ellipse(800, 330, 34, 22, 0, 0, Math.PI * 2); c.fill();
-  return c.getImageData(0, 0, width, height);
-}
 
 function applyBaseFilters(img: ImageData, sat: number, con: number, greenPref: boolean, edgeBoost: boolean) {
   const src = img.data;
@@ -126,7 +96,6 @@ function applyPeripheryZoom(img: ImageData, diameter: number, mag: number, offX:
   const cx = cw / 2 + offX * cw;
   const cy = ch / 2 + offY * ch;
   const radius = diameter / 2;
-  // map output pixel -> source pixel (source same size as canvas)
   const sxScale = sw / cw, syScale = sh / ch;
   for (let y = 0; y < ch; y++) {
     for (let x = 0; x < cw; x++) {
@@ -148,6 +117,7 @@ function applyPeripheryZoom(img: ImageData, diameter: number, mag: number, offX:
 export default function TuningSimulator() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const originalRef = useRef<ImageData | null>(null);
+  const [ready, setReady] = useState(false);
   const [mode, setMode] = useState<Mode>("quick");
   const [base, setBase] = useState<BaseParams>({ saturation: 1.0, contrast: 1.0, edgeBoost: false, greenPrefer: false });
   const [center, setCenter] = useState<CenterParams>({ zoomFactor: 1.8, windowWidth: 600, windowHeight: 338, offsetX: 0, offsetY: 0 });
@@ -203,88 +173,132 @@ export default function TuningSimulator() {
   }, [mode, base, center, periphery, reading]);
 
   useEffect(() => {
-    originalRef.current = generateTestImage(960, 540);
-    render();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = previewImg;
+    img.onload = () => {
+      const off = document.createElement("canvas");
+      off.width = 960; off.height = 540;
+      const c = off.getContext("2d")!;
+      c.drawImage(img, 0, 0, 960, 540);
+      originalRef.current = c.getImageData(0, 0, 960, 540);
+      setReady(true);
+    };
+  }, []);
 
-  useEffect(() => { render(); }, [render]);
+  useEffect(() => { if (ready) render(); }, [render, ready]);
 
   const tabs: Mode[] = ["quick", "enhance", "center", "periphery", "reading"];
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 bg-[#0b1018] text-[#9bc6cf]" style={{ fontFamily: "'Fira Code', 'Courier New', Consolas, monospace" }}>
+    <div className="flex-1 flex flex-col min-h-0 bg-background">
       {/* Tab bar */}
-      <div className="bg-[#11151e] border-b border-[#2a3a44] flex flex-wrap gap-1.5 px-3 pt-1.5">
-        {tabs.map(t => (
-          <button
-            key={t}
-            onClick={() => setMode(t)}
-            className={`px-4 py-2 text-xs font-bold rounded-t-lg border border-b-0 transition-colors ${
-              mode === t
-                ? "bg-[#0c121b] text-[#b7e4fa] border-[#6ab0c6] shadow-[inset_0_2px_0_#4f9eb3] -mb-px"
-                : "bg-[#0a0e14] text-[#9bc6cf] border-[#2c404c] hover:bg-[#1c2a33] hover:text-[#d4f1f9] hover:border-[#5f9db2]"
-            }`}
-          >
-            {t === "quick" ? "视野快速检查" : t === "enhance" ? "实时画面增强偏好" : t === "center" ? "中心放大" : t === "periphery" ? "旁中心放大" : "阅读模式配色"}
-          </button>
-        ))}
+      <div className="border-b border-line bg-card flex flex-wrap gap-2 px-4 pt-3 pb-0">
+        {tabs.map(t => {
+          const Icon = MODE_META[t].icon;
+          const active = mode === t;
+          return (
+            <button
+              key={t}
+              onClick={() => setMode(t)}
+              className={`inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold rounded-t-xl border-t border-x transition-all -mb-px ${
+                active
+                  ? "bg-background text-primary border-line border-b-background"
+                  : "bg-secondary/50 text-muted-foreground border-transparent hover:text-foreground hover:bg-secondary"
+              }`}
+            >
+              <Icon className="w-4 h-4" />
+              {MODE_META[t].label}
+            </button>
+          );
+        })}
       </div>
 
-      <div className="flex-1 flex flex-wrap gap-4 p-4 min-h-0 overflow-auto">
+      <div className="flex-1 flex flex-wrap gap-5 p-5 min-h-0 overflow-auto">
         {/* Preview */}
-        <div className="flex-[3] min-w-[280px] bg-[#03060c] border-2 border-[#2e4b5a] p-3 shadow-inner">
-          <div className="flex justify-between border-b border-dashed border-[#2e5b6e] pb-1.5 mb-3 text-xs text-[#7caebf]">
-            <span>【 AR 实时预览区 】</span>
-            <span>1920×1080 动态效果实时生效</span>
-          </div>
-          <div className="bg-black border border-[#3a6e82] flex items-center justify-center">
-            <canvas ref={canvasRef} width={960} height={540} className="w-full h-auto bg-black block cursor-crosshair" style={{ aspectRatio: "16/9" }} />
-          </div>
-          <div className="mt-2.5 flex justify-between text-[11px] text-[#5e909e] border-t border-dashed border-[#2a4d5a] pt-2">
-            <span>当前模式: {MODE_LABELS[mode]}</span>
-            <span>⚡ 实时图像处理</span>
+        <div className="flex-[3] min-w-[320px] flex flex-col">
+          <div className="bg-card rounded-2xl border border-line shadow-sm p-4 flex flex-col">
+            <div className="flex items-center justify-between pb-3 border-b border-line mb-3">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-ok animate-pulse" />
+                <span className="text-sm font-semibold text-foreground">AR 实时预览</span>
+              </div>
+              <span className="text-xs text-soft">1920 × 1080 · 实时生效</span>
+            </div>
+            <div className="rounded-xl overflow-hidden bg-black border border-line">
+              <canvas ref={canvasRef} width={960} height={540} className="w-full h-auto block" style={{ aspectRatio: "16/9" }} />
+            </div>
+            <div className="mt-3 flex justify-between items-center text-xs text-soft">
+              <span>当前模式：<span className="text-foreground font-medium">{MODE_META[mode].label}</span></span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary" />实时图像处理
+              </span>
+            </div>
           </div>
         </div>
 
         {/* Param panel */}
-        <div className="flex-[1.2] min-w-[280px] bg-[#0a0f17] border-2 border-[#2e4b5a] p-4 shadow-inner overflow-auto">
-          <ParamPanel
-            mode={mode}
-            base={base} setBase={setBase}
-            center={center} setCenter={setCenter}
-            periphery={periphery} setPeriphery={setPeriphery}
-            reading={reading} setReading={setReading}
-          />
+        <div className="flex-[1.2] min-w-[300px]">
+          <div className="bg-card rounded-2xl border border-line shadow-sm p-5 h-full overflow-auto">
+            <ParamPanel
+              mode={mode}
+              base={base} setBase={setBase}
+              center={center} setCenter={setCenter}
+              periphery={periphery} setPeriphery={setPeriphery}
+              reading={reading} setReading={setReading}
+            />
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-function Title({ children }: { children: React.ReactNode }) {
-  return <div className="text-base font-bold text-[#b8dee9] border-l-[12px] border-[#4797af] pl-3 mb-4 tracking-wider">{children}</div>;
-}
-function Divider() { return <div className="h-px bg-[#2a4d5a] my-4" />; }
-function ValDisplay({ children }: { children: React.ReactNode }) {
-  return <span className="bg-[#03070c] px-1.5 py-0.5 border-l-[3px] border-[#3f9cae] text-[11px] text-[#88c9dc]">{children}</span>;
-}
-function SliderRow({ label, value, min, max, step, onChange }: { label: string; value: number; min: number; max: number; step: number; onChange: (v: number) => void; }) {
+function PanelTitle({ icon: Icon, children }: { icon: React.ComponentType<{ className?: string }>; children: React.ReactNode }) {
   return (
-    <div className="mb-5">
-      <label className="flex justify-between text-[#9cc7d4] text-xs uppercase mb-2">
-        <span>{label}</span>
-        <ValDisplay>{Number.isInteger(step) ? value : value.toFixed(2)}</ValDisplay>
-      </label>
-      <input type="range" min={min} max={max} step={step} value={value} onChange={e => onChange(parseFloat(e.target.value))}
-        className="w-full h-[3px] bg-[#1e2f38] rounded appearance-none cursor-pointer accent-[#7bcbd9]" />
+    <div className="flex items-center gap-2 mb-5 pb-3 border-b border-line">
+      <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+        <Icon className="w-4 h-4" />
+      </div>
+      <h3 className="text-base font-bold text-foreground">{children}</h3>
     </div>
   );
 }
-function AsciiBtn({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) {
+
+function SliderRow({ label, value, min, max, step, onChange, unit }: { label: string; value: number; min: number; max: number; step: number; onChange: (v: number) => void; unit?: string }) {
+  const display = Number.isInteger(step) ? value.toString() : value.toFixed(2);
   return (
-    <button onClick={onClick} className="bg-[#0f1820] border border-[#3f6e7e] text-[#bfe4ef] font-mono font-bold px-3 py-2 text-xs hover:bg-[#1c3b46] hover:border-[#78b9cb] hover:text-white hover:shadow-[0_0_4px_#3ea3bb] transition-colors">
-      {children}
-    </button>
+    <div className="mb-5">
+      <div className="flex justify-between items-center mb-2">
+        <Label className="text-xs font-medium text-soft">{label}</Label>
+        <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-md min-w-[44px] text-center">
+          {display}{unit || ""}
+        </span>
+      </div>
+      <Slider min={min} max={max} step={step} value={[value]} onValueChange={(v) => onChange(v[0])} />
+    </div>
+  );
+}
+
+function SwitchRow({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <div className="flex items-center justify-between py-2.5 px-3 rounded-lg bg-secondary/40 mb-2.5">
+      <Label className="text-sm text-foreground cursor-pointer">{label}</Label>
+      <Switch checked={checked} onCheckedChange={onChange} />
+    </div>
+  );
+}
+
+function ActionRow({ onReset, saveLabel = "保存参数" }: { onReset?: () => void; saveLabel?: string }) {
+  return (
+    <div className="flex gap-3 mt-6 pt-4 border-t border-line">
+      <Button variant="outline" size="sm" className="flex-1" onClick={onReset}>
+        <RotateCcw className="w-3.5 h-3.5 mr-1.5" />重置
+      </Button>
+      <Button size="sm" className="flex-1">
+        <Save className="w-3.5 h-3.5 mr-1.5" />{saveLabel}
+      </Button>
+    </div>
   );
 }
 
@@ -300,67 +314,58 @@ function ParamPanel(props: {
   if (mode === "quick") {
     return (
       <>
-        <Title>▶ 视野快速检查</Title>
-        <div className="text-[11px] text-[#3b7477] text-center my-3">原始画面直出，无任何滤镜增强。<br />用于基准视野评估。</div>
-        <Divider />
-        <div className="flex gap-3.5 mt-6 justify-between"><AsciiBtn>重置视图</AsciiBtn></div>
+        <PanelTitle icon={Eye}>视野快速检查</PanelTitle>
+        <div className="text-sm text-soft leading-relaxed bg-secondary/40 rounded-lg p-4">
+          原始画面直出，无任何滤镜增强。<br />用于基准视野评估。
+        </div>
+        <div className="mt-6 pt-4 border-t border-line">
+          <Button variant="outline" size="sm" className="w-full">
+            <RotateCcw className="w-3.5 h-3.5 mr-1.5" />重置视图
+          </Button>
+        </div>
       </>
     );
   }
   if (mode === "enhance") {
     return (
       <>
-        <Title>▶ 实时画面增强调节</Title>
+        <PanelTitle icon={Wand2}>实时画面增强调节</PanelTitle>
         <SliderRow label="饱和度" value={base.saturation} min={0} max={2} step={0.01} onChange={v => setBase({ ...base, saturation: v })} />
         <SliderRow label="对比度" value={base.contrast} min={0} max={2} step={0.01} onChange={v => setBase({ ...base, contrast: v })} />
-        <div className="flex items-center gap-3 my-3 text-[#bbdbe5] text-xs">
-          <input type="checkbox" checked={base.edgeBoost} onChange={e => setBase({ ...base, edgeBoost: e.target.checked })} className="w-[18px] h-[18px] accent-[#34899e]" />
-          <label>开启边缘增强</label>
-        </div>
-        <div className="flex items-center gap-3 my-3 text-[#bbdbe5] text-xs">
-          <input type="checkbox" checked={base.greenPrefer} onChange={e => setBase({ ...base, greenPrefer: e.target.checked })} className="w-[18px] h-[18px] accent-[#34899e]" />
-          <label>绿色偏好滤光</label>
-        </div>
-        <div className="flex gap-3.5 mt-6 justify-between">
-          <AsciiBtn onClick={() => setBase({ saturation: 1, contrast: 1, edgeBoost: false, greenPrefer: false })}>重置默认</AsciiBtn>
-          <AsciiBtn>保存参数</AsciiBtn>
-        </div>
+        <SwitchRow label="开启边缘增强" checked={base.edgeBoost} onChange={v => setBase({ ...base, edgeBoost: v })} />
+        <SwitchRow label="绿色偏好滤光" checked={base.greenPrefer} onChange={v => setBase({ ...base, greenPrefer: v })} />
+        <ActionRow onReset={() => setBase({ saturation: 1, contrast: 1, edgeBoost: false, greenPrefer: false })} />
       </>
     );
   }
   if (mode === "center") {
     return (
       <>
-        <Title>▶ 中心放大调节</Title>
-        <SliderRow label="放大倍率" value={center.zoomFactor} min={1} max={3.5} step={0.02} onChange={v => setCenter({ ...center, zoomFactor: v })} />
-        <SliderRow label="窗口宽度(px)" value={center.windowWidth} min={200} max={800} step={5} onChange={v => setCenter({ ...center, windowWidth: v })} />
-        <SliderRow label="窗口高度(px)" value={center.windowHeight} min={120} max={500} step={5} onChange={v => setCenter({ ...center, windowHeight: v })} />
+        <PanelTitle icon={ZoomIn}>中心放大调节</PanelTitle>
+        <SliderRow label="放大倍率" value={center.zoomFactor} min={1} max={3.5} step={0.02} onChange={v => setCenter({ ...center, zoomFactor: v })} unit="×" />
+        <SliderRow label="窗口宽度" value={center.windowWidth} min={200} max={800} step={5} onChange={v => setCenter({ ...center, windowWidth: v })} unit="px" />
+        <SliderRow label="窗口高度" value={center.windowHeight} min={120} max={500} step={5} onChange={v => setCenter({ ...center, windowHeight: v })} unit="px" />
         <SliderRow label="水平偏移" value={center.offsetX} min={-150} max={150} step={5} onChange={v => setCenter({ ...center, offsetX: v })} />
         <SliderRow label="垂直偏移" value={center.offsetY} min={-100} max={100} step={5} onChange={v => setCenter({ ...center, offsetY: v })} />
-        <div className="text-[11px] text-[#3b7477] text-center my-3">继承画面增强基础参数(饱和度/对比度/边缘/滤光)</div>
-        <div className="flex gap-3.5 mt-6 justify-between">
-          <AsciiBtn onClick={() => setCenter({ zoomFactor: 1.8, windowWidth: 600, windowHeight: 338, offsetX: 0, offsetY: 0 })}>重置窗口</AsciiBtn>
-          <AsciiBtn>保存配置</AsciiBtn>
+        <div className="text-xs text-soft bg-secondary/40 rounded-lg p-3 leading-relaxed">
+          继承画面增强基础参数（饱和度 / 对比度 / 边缘 / 滤光）
         </div>
+        <ActionRow saveLabel="保存配置" onReset={() => setCenter({ zoomFactor: 1.8, windowWidth: 600, windowHeight: 338, offsetX: 0, offsetY: 0 })} />
       </>
     );
   }
   if (mode === "periphery") {
     return (
       <>
-        <Title>▶ 旁中心放大调节</Title>
-        <SliderRow label="窗口直径(px)" value={periphery.diameter} min={200} max={700} step={10} onChange={v => setPeriphery({ ...periphery, diameter: v })} />
-        <SliderRow label="放大倍率" value={periphery.magnification} min={1} max={2.8} step={0.02} onChange={v => setPeriphery({ ...periphery, magnification: v })} />
+        <PanelTitle icon={Focus}>旁中心放大调节</PanelTitle>
+        <SliderRow label="窗口直径" value={periphery.diameter} min={200} max={700} step={10} onChange={v => setPeriphery({ ...periphery, diameter: v })} unit="px" />
+        <SliderRow label="放大倍率" value={periphery.magnification} min={1} max={2.8} step={0.02} onChange={v => setPeriphery({ ...periphery, magnification: v })} unit="×" />
         <SliderRow label="水平偏移比" value={periphery.offsetXRatio} min={-0.5} max={0.5} step={0.02} onChange={v => setPeriphery({ ...periphery, offsetXRatio: v })} />
         <SliderRow label="垂直偏移比" value={periphery.offsetYRatio} min={-0.5} max={0.5} step={0.02} onChange={v => setPeriphery({ ...periphery, offsetYRatio: v })} />
-        <div className="flex gap-3.5 mt-6 justify-between">
-          <AsciiBtn onClick={() => setPeriphery({ diameter: 400, magnification: 1.6, offsetXRatio: 0, offsetYRatio: 0 })}>重置位置</AsciiBtn>
-          <AsciiBtn>保存配置</AsciiBtn>
-        </div>
+        <ActionRow saveLabel="保存配置" onReset={() => setPeriphery({ diameter: 400, magnification: 1.6, offsetXRatio: 0, offsetYRatio: 0 })} />
       </>
     );
   }
-  // reading
   const schemes: { v: ReadingParams["scheme"]; label: string }[] = [
     { v: "bw", label: "黑白(高对比)" },
     { v: "wb", label: "白黑" },
@@ -370,20 +375,19 @@ function ParamPanel(props: {
   ];
   return (
     <>
-      <Title>▶ 阅读模式颜色偏好</Title>
-      <div className="flex flex-wrap gap-3 my-2.5">
+      <PanelTitle icon={BookOpen}>阅读模式颜色偏好</PanelTitle>
+      <RadioGroup value={reading.scheme} onValueChange={(v) => setReading({ ...reading, scheme: v as ReadingParams["scheme"] })} className="grid grid-cols-2 gap-2 mb-5">
         {schemes.map(s => (
-          <label key={s.v} className="text-[#b0d4e0] text-[11px] inline-flex items-center gap-1.5 cursor-pointer">
-            <input type="radio" name="readingScheme" value={s.v} checked={reading.scheme === s.v} onChange={() => setReading({ ...reading, scheme: s.v })} className="accent-[#34899e]" />
-            {s.label}
+          <label key={s.v} className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border cursor-pointer transition-all ${
+            reading.scheme === s.v ? "border-primary bg-primary/10 text-primary" : "border-line bg-secondary/30 text-foreground hover:border-primary/40"
+          }`}>
+            <RadioGroupItem value={s.v} className="shrink-0" />
+            <span className="text-xs font-medium">{s.label}</span>
           </label>
         ))}
-      </div>
+      </RadioGroup>
       <SliderRow label="配色对比度" value={reading.customContrast} min={0.6} max={2.2} step={0.02} onChange={v => setReading({ ...reading, customContrast: v })} />
-      <div className="flex gap-3.5 mt-6 justify-between">
-        <AsciiBtn onClick={() => setReading({ scheme: "bw", customContrast: 1.2 })}>重置配色</AsciiBtn>
-        <AsciiBtn>保存方案</AsciiBtn>
-      </div>
+      <ActionRow saveLabel="保存方案" onReset={() => setReading({ scheme: "bw", customContrast: 1.2 })} />
     </>
   );
 }
