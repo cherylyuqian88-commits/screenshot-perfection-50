@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Slider } from "@/components/ui/slider";
+import * as SliderPrimitive from "@radix-ui/react-slider";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Eye, Wand2, ZoomIn, Focus, BookOpen, RotateCcw, Save } from "lucide-react";
 import previewImg from "@/assets/tuning-preview.png";
+import { cn } from "@/lib/utils";
 
 type Mode = "quick" | "enhance" | "center" | "periphery" | "reading";
 
@@ -114,6 +115,21 @@ function applyPeripheryZoom(img: ImageData, diameter: number, mag: number, offX:
   return new ImageData(out, cw, ch);
 }
 
+/* ─── Dark Slider (track matches dark blue theme) ─── */
+function DarkSlider({ className, ...props }: React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>) {
+  return (
+    <SliderPrimitive.Root
+      className={cn("relative flex w-full touch-none select-none items-center", className)}
+      {...props}
+    >
+      <SliderPrimitive.Track className="relative h-2 w-full grow overflow-hidden rounded-full bg-[hsl(220,20%,22%)]">
+        <SliderPrimitive.Range className="absolute h-full bg-[hsl(197,92%,60%)]" />
+      </SliderPrimitive.Track>
+      <SliderPrimitive.Thumb className="block h-5 w-5 rounded-full border-2 border-[hsl(197,92%,60%)] bg-[hsl(222,47%,11%)] ring-offset-[hsl(222,47%,11%)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(197,92%,60%)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
+    </SliderPrimitive.Root>
+  );
+}
+
 export default function TuningSimulator() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const originalRef = useRef<ImageData | null>(null);
@@ -191,9 +207,9 @@ export default function TuningSimulator() {
   const tabs: Mode[] = ["quick", "enhance", "center", "periphery", "reading"];
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 bg-background">
+    <div className="flex-1 flex flex-col min-h-0">
       {/* Tab bar */}
-      <div className="border-b border-line bg-card flex flex-wrap gap-2 px-4 pt-3 pb-0">
+      <div className="border-b border-white/[0.08] bg-[hsl(222,47%,11%)]/60 backdrop-blur-sm flex flex-wrap gap-2 px-4 pt-3 pb-0">
         {tabs.map(t => {
           const Icon = MODE_META[t].icon;
           const active = mode === t;
@@ -203,8 +219,8 @@ export default function TuningSimulator() {
               onClick={() => setMode(t)}
               className={`inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold rounded-t-xl border-t border-x transition-all -mb-px ${
                 active
-                  ? "bg-background text-primary border-line border-b-background"
-                  : "bg-secondary/50 text-muted-foreground border-transparent hover:text-foreground hover:bg-secondary"
+                  ? "bg-[hsl(220,20%,14%)] text-white border-white/[0.12] border-b-[hsl(220,20%,14%)]"
+                  : "text-[hsl(216,20%,60%)] border-transparent hover:text-white hover:bg-white/[0.06]"
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -217,21 +233,21 @@ export default function TuningSimulator() {
       <div className="flex-1 flex flex-wrap gap-5 p-5 min-h-0 overflow-auto">
         {/* Preview */}
         <div className="flex-[3] min-w-[320px] flex flex-col">
-          <div className="bg-card rounded-2xl border border-line shadow-sm p-4 flex flex-col">
-            <div className="flex items-center justify-between pb-3 border-b border-line mb-3">
+          <div className="bg-gradient-to-b from-[hsl(222,47%,11%)] to-[hsl(220,20%,9%)] rounded-2xl border border-white/[0.08] shadow-lg p-4 flex flex-col">
+            <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] mb-3">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-ok animate-pulse" />
-                <span className="text-sm font-semibold text-foreground">AR 实时预览</span>
+                <span className="w-2 h-2 rounded-full bg-[hsl(160,84%,39%)] animate-pulse" />
+                <span className="text-sm font-semibold text-primary-foreground">AR 实时预览</span>
               </div>
-              <span className="text-xs text-soft">1920 × 1080 · 实时生效</span>
+              <span className="text-xs text-[hsl(216,20%,60%)]">1920 × 1080 · 实时生效</span>
             </div>
-            <div className="rounded-xl overflow-hidden bg-black border border-line">
+            <div className="rounded-xl overflow-hidden bg-black border border-white/[0.08]">
               <canvas ref={canvasRef} width={960} height={540} className="w-full h-auto block" style={{ aspectRatio: "16/9" }} />
             </div>
-            <div className="mt-3 flex justify-between items-center text-xs text-soft">
-              <span>当前模式：<span className="text-foreground font-medium">{MODE_META[mode].label}</span></span>
+            <div className="mt-3 flex justify-between items-center text-xs text-[hsl(216,20%,60%)]">
+              <span>当前模式：<span className="text-primary-foreground font-medium">{MODE_META[mode].label}</span></span>
               <span className="inline-flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary" />实时图像处理
+                <span className="w-1.5 h-1.5 rounded-full bg-[hsl(197,92%,60%)]" />实时图像处理
               </span>
             </div>
           </div>
@@ -239,7 +255,7 @@ export default function TuningSimulator() {
 
         {/* Param panel */}
         <div className="flex-[1.2] min-w-[300px]">
-          <div className="bg-card rounded-2xl border border-line shadow-sm p-5 h-full overflow-auto">
+          <div className="bg-gradient-to-b from-[hsl(222,47%,11%)] to-[hsl(220,20%,9%)] rounded-2xl border border-white/[0.08] shadow-lg p-5 h-full overflow-auto">
             <ParamPanel
               mode={mode}
               base={base} setBase={setBase}
@@ -256,11 +272,11 @@ export default function TuningSimulator() {
 
 function PanelTitle({ icon: Icon, children }: { icon: React.ComponentType<{ className?: string }>; children: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-2 mb-5 pb-3 border-b border-line">
-      <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+    <div className="flex items-center gap-2 mb-5 pb-3 border-b border-white/[0.08]">
+      <div className="w-8 h-8 rounded-lg bg-[hsl(197,92%,60%)]/15 text-[hsl(197,92%,60%)] flex items-center justify-center">
         <Icon className="w-4 h-4" />
       </div>
-      <h3 className="text-base font-bold text-foreground">{children}</h3>
+      <h3 className="text-base font-bold text-primary-foreground">{children}</h3>
     </div>
   );
 }
@@ -270,20 +286,20 @@ function SliderRow({ label, value, min, max, step, onChange, unit }: { label: st
   return (
     <div className="mb-5">
       <div className="flex justify-between items-center mb-2">
-        <Label className="text-xs font-medium text-soft">{label}</Label>
-        <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-md min-w-[44px] text-center">
+        <Label className="text-xs font-medium text-[hsl(216,20%,60%)]">{label}</Label>
+        <span className="text-xs font-mono font-semibold text-[hsl(197,92%,60%)] bg-[hsl(197,92%,60%)]/15 px-2 py-0.5 rounded-md min-w-[44px] text-center">
           {display}{unit || ""}
         </span>
       </div>
-      <Slider min={min} max={max} step={step} value={[value]} onValueChange={(v) => onChange(v[0])} />
+      <DarkSlider min={min} max={max} step={step} value={[value]} onValueChange={(v) => onChange(v[0])} />
     </div>
   );
 }
 
 function SwitchRow({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void }) {
   return (
-    <div className="flex items-center justify-between py-2.5 px-3 rounded-lg bg-secondary/40 mb-2.5">
-      <Label className="text-sm text-foreground cursor-pointer">{label}</Label>
+    <div className="flex items-center justify-between py-2.5 px-3 rounded-lg bg-white/[0.06] mb-2.5">
+      <Label className="text-sm text-primary-foreground cursor-pointer">{label}</Label>
       <Switch checked={checked} onCheckedChange={onChange} />
     </div>
   );
@@ -291,11 +307,11 @@ function SwitchRow({ label, checked, onChange }: { label: string; checked: boole
 
 function ActionRow({ onReset, saveLabel = "保存参数" }: { onReset?: () => void; saveLabel?: string }) {
   return (
-    <div className="flex gap-3 mt-6 pt-4 border-t border-line">
-      <Button variant="outline" size="sm" className="flex-1" onClick={onReset}>
+    <div className="flex gap-3 mt-6 pt-4 border-t border-white/[0.08]">
+      <Button variant="outline" size="sm" className="flex-1 border-white/[0.12] text-primary-foreground hover:bg-white/[0.08] hover:text-white" onClick={onReset}>
         <RotateCcw className="w-3.5 h-3.5 mr-1.5" />重置
       </Button>
-      <Button size="sm" className="flex-1">
+      <Button size="sm" className="flex-1 bg-gradient-to-r from-[hsl(199,89%,49%)] to-[hsl(224,76%,48%)] text-white shadow-[0_12px_28px_hsl(224_76%_48%/0.24)]">
         <Save className="w-3.5 h-3.5 mr-1.5" />{saveLabel}
       </Button>
     </div>
@@ -315,11 +331,11 @@ function ParamPanel(props: {
     return (
       <>
         <PanelTitle icon={Eye}>视野快速检查</PanelTitle>
-        <div className="text-sm text-soft leading-relaxed bg-secondary/40 rounded-lg p-4">
+        <div className="text-sm text-[hsl(216,20%,60%)] leading-relaxed bg-white/[0.06] rounded-lg p-4">
           原始画面直出，无任何滤镜增强。<br />用于基准视野评估。
         </div>
-        <div className="mt-6 pt-4 border-t border-line">
-          <Button variant="outline" size="sm" className="w-full">
+        <div className="mt-6 pt-4 border-t border-white/[0.08]">
+          <Button variant="outline" size="sm" className="w-full border-white/[0.12] text-primary-foreground hover:bg-white/[0.08] hover:text-white">
             <RotateCcw className="w-3.5 h-3.5 mr-1.5" />重置视图
           </Button>
         </div>
@@ -347,7 +363,7 @@ function ParamPanel(props: {
         <SliderRow label="窗口高度" value={center.windowHeight} min={120} max={500} step={5} onChange={v => setCenter({ ...center, windowHeight: v })} unit="px" />
         <SliderRow label="水平偏移" value={center.offsetX} min={-150} max={150} step={5} onChange={v => setCenter({ ...center, offsetX: v })} />
         <SliderRow label="垂直偏移" value={center.offsetY} min={-100} max={100} step={5} onChange={v => setCenter({ ...center, offsetY: v })} />
-        <div className="text-xs text-soft bg-secondary/40 rounded-lg p-3 leading-relaxed">
+        <div className="text-xs text-[hsl(216,20%,60%)] bg-white/[0.06] rounded-lg p-3 leading-relaxed">
           继承画面增强基础参数（饱和度 / 对比度 / 边缘 / 滤光）
         </div>
         <ActionRow saveLabel="保存配置" onReset={() => setCenter({ zoomFactor: 1.8, windowWidth: 600, windowHeight: 338, offsetX: 0, offsetY: 0 })} />
@@ -379,7 +395,7 @@ function ParamPanel(props: {
       <RadioGroup value={reading.scheme} onValueChange={(v) => setReading({ ...reading, scheme: v as ReadingParams["scheme"] })} className="grid grid-cols-2 gap-2 mb-5">
         {schemes.map(s => (
           <label key={s.v} className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border cursor-pointer transition-all ${
-            reading.scheme === s.v ? "border-primary bg-primary/10 text-primary" : "border-line bg-secondary/30 text-foreground hover:border-primary/40"
+            reading.scheme === s.v ? "border-[hsl(197,92%,60%)] bg-[hsl(197,92%,60%)]/15 text-[hsl(197,92%,60%)]" : "border-white/[0.08] bg-white/[0.04] text-primary-foreground/80 hover:border-[hsl(197,92%,60%)]/40"
           }`}>
             <RadioGroupItem value={s.v} className="shrink-0" />
             <span className="text-xs font-medium">{s.label}</span>
